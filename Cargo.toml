@@ -4,6 +4,10 @@ version = "1.0.0"
 edition = "2024"
 
 [dependencies]
+chrono = "0.4.41"
 colored = "3.0.0"
 serde = { version = "1.0.219", features = ["derive"] }
 toml = "0.9.4"
+
+[build-dependencies]
+chrono = "0.4.41"

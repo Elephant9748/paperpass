@@ -1,7 +1,7 @@
 use colored::Colorize;
 use std::io::{self, Write};
 
-use crate::options::{Opt, args_options};
+use crate::options::options::{Opt, args_options};
 
 mod config;
 mod gpg;
@@ -17,11 +17,15 @@ fn main() {
             arg if arg == "-list" => args_options(Opt::ListRecepients(String::from("some text"))),
             arg if arg == "-h" => args_options(Opt::Help),
             arg if arg == "-v" => args_options(Opt::Version),
-            _ => println!(
-                "{}{}",
-                "::".bright_blue(),
-                " args not found \"-h\" to see available options".bright_yellow()
-            ),
+            _ => {
+                println!(
+                    "{}{}",
+                    "::".bright_blue(),
+                    " args not found \"-h\" to see available options".bright_yellow()
+                );
+                println!();
+                args_options(Opt::Help);
+            }
         }
     }
 }
