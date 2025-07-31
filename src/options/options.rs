@@ -1,5 +1,5 @@
 use crate::{
-    config::pgpconfig::config_key_to_used,
+    config::init_config,
     gpg::helper::{GpgHelper, listprivatekeys},
     options::helpstdout::prompt_help,
 };
@@ -13,7 +13,7 @@ pub enum Opt {
 
 pub fn args_options(opt: Opt) {
     match opt {
-        Opt::Init => config_key_to_used(),
+        Opt::Init => init_config(),
         Opt::ListRecepients(_a) => {
             let pk = GpgHelper::new(listprivatekeys().unwrap());
             println!("{:?}", pk.get_by_name("brandon"));
