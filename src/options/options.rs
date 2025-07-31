@@ -1,11 +1,12 @@
 use crate::{
-    config::init_config,
+    config::{init_config, init_config_with_params},
     gpg::helper::{GpgHelper, listprivatekeys},
     options::helpstdout::prompt_help,
 };
 
 pub enum Opt {
     Init,
+    InitParams(String, String, String),
     ListRecepients(String),
     Help,
     Version,
@@ -14,6 +15,7 @@ pub enum Opt {
 pub fn args_options(opt: Opt) {
     match opt {
         Opt::Init => init_config(),
+        Opt::InitParams(a, b, c) => init_config_with_params(a.as_str(), b.as_str(), c.as_str()),
         Opt::ListRecepients(_a) => {
             let pk = GpgHelper::new(listprivatekeys().unwrap());
             println!("{:?}", pk.get_by_name("brandon"));
