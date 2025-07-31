@@ -1,18 +1,25 @@
 pub mod configfile;
-pub mod pgpconfig;
 
+use crate::{
+    catch_stdin,
+    gpg::helper::{GpgHelper, listprivatekeys},
+};
+use colored::Colorize;
+use serde::{Deserialize, Serialize};
 use std::{
     fs::File,
     io::{BufWriter, Write},
 };
 
-use colored::Colorize;
+#[derive(Serialize, Deserialize, Debug)]
+struct Config {
+    gpg: Gpg,
+}
 
-use crate::{
-    catch_stdin,
-    config::pgpconfig::{Config, Gpg},
-    gpg::helper::{GpgHelper, listprivatekeys},
-};
+#[derive(Serialize, Deserialize, Debug)]
+struct Gpg {
+    key: String,
+}
 
 pub fn init_config() {
     let recipient = GpgHelper::new(listprivatekeys().unwrap());
