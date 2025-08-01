@@ -1,9 +1,0 @@
-[config]
-path = "configs/paperpass.toml"
-git = false
-
-[gpg]
-key = "BigOort"
-
-[store]
-path = "store/"

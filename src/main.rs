@@ -4,7 +4,7 @@ use std::io::{self, Write};
 use crate::{
     errors::err::{Error, message},
     options::{
-        init_options::{init_options_3, init_options_5, init_options_7},
+        init_options::{init_options_2, init_options_3, init_options_5, init_options_7},
         options::{Opt, args_options},
     },
 };
@@ -13,6 +13,7 @@ mod config;
 mod errors;
 mod gpg;
 mod options;
+mod utils;
 
 fn main() {
     let mut paperpass_args: Vec<String> = std::env::args().collect();
@@ -35,15 +36,10 @@ fn main() {
                 }
             }
         }
-        3 => {
-            init_options_3(paperpass_args);
-        }
-        5 => {
-            init_options_5(paperpass_args);
-        }
-        7 => {
-            init_options_7(paperpass_args);
-        }
+        2 => init_options_2(paperpass_args),
+        3 => init_options_3(paperpass_args),
+        5 => init_options_5(paperpass_args),
+        7 => init_options_7(paperpass_args),
         _ => check_option_double = true,
     }
 

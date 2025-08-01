@@ -14,24 +14,24 @@ use std::{
 };
 
 #[derive(Serialize, Deserialize, Debug)]
-struct Configs {
-    config: Config,
-    gpg: Gpg,
-    store: Store,
+pub struct Configs {
+    pub config: Config,
+    pub gpg: Gpg,
+    pub store: Store,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-struct Gpg {
-    key: String,
+pub struct Gpg {
+    pub key: String,
 }
 #[derive(Serialize, Deserialize, Debug)]
-struct Config {
-    path: String,
+pub struct Config {
+    pub path: String,
     git: bool,
 }
 #[derive(Serialize, Deserialize, Debug)]
-struct Store {
-    path: String,
+pub struct Store {
+    pub path: String,
 }
 
 pub fn init_config() {
@@ -57,8 +57,9 @@ pub fn init_config() {
     // where data is store
     println!("\n{}{}", "::".bright_blue(), " Store data".bright_yellow());
     println!(
-        "\x1B[3m{}\x1B[23m",
-        "   example path: ~/[whereyoustoredata] or just full path /[whereyoustoredata]"
+        "{}",
+        "   example path: ~/[whereyoustoredata] or just full path [where/you/store/data]"
+            .italic()
             .bright_magenta()
     );
     print!("\n{}", "where to store data: ".bright_white());
@@ -85,12 +86,8 @@ pub fn init_config() {
     let mut buf_writer = BufWriter::new(file);
     let _ = buf_writer.write_all(toml.as_bytes());
     let _ = buf_writer.flush();
-    println!(
-        "{:#?}\n{}{}",
-        config,
-        "::".bright_blue(),
-        " init config succeed.".bright_green()
-    );
+
+    init_done(config);
 }
 
 // init config with params
@@ -106,13 +103,20 @@ pub fn init_config_with_params(opt1: &str, opt2: &str, opt3: &str) {
 
     // config
     let forcepath = force_create_dir_on_file(&opt2.to_owned());
-    println!("{}", forcepath);
+    let mut configpath = "paperpass.toml".to_string();
+    if !forcepath.is_empty() {
+        configpath = forcepath.as_str().to_owned() + "/paperpass.toml";
+    };
+
+    //set env
+    set_env(configpath.as_str());
+
     // data store
     let store_path = set_store_path(opt1.to_string()).unwrap();
 
     let config = Configs {
         config: Config {
-            path: format!("{}/paperpass.toml", forcepath),
+            path: configpath.to_owned(),
             git: false,
         },
         gpg: Gpg {
@@ -121,17 +125,12 @@ pub fn init_config_with_params(opt1: &str, opt2: &str, opt3: &str) {
         store: Store { path: store_path },
     };
     let toml = toml::to_string(&config).unwrap();
-    let file =
-        File::create(format!("{}paperpass.toml", forcepath)).expect(":: paperpass.toml not found");
+    let file = File::create(&configpath).expect(":: paperpass.toml not found");
     let mut buf_writer = BufWriter::new(file);
     let _ = buf_writer.write_all(toml.as_bytes());
     let _ = buf_writer.flush();
-    println!(
-        "{:#?}\n{}{}",
-        config,
-        "::".bright_blue(),
-        " init config succeed.".bright_green()
-    );
+
+    init_done(config);
 }
 
 fn force_create_dir_on_file(path: &str) -> String {
@@ -142,4 +141,40 @@ fn force_create_dir_on_file(path: &str) -> String {
         return find_dir;
     }
     find_dir
+}
+
+static ENV_KEY: &str = "PAPERPASS_CONFIG";
+fn set_env(path: &str) {
+    unsafe {
+        std::env::set_var(ENV_KEY, path);
+    }
+}
+
+fn init_done(config: Configs) {
+    println!(
+        "{:#?}\n{}{}",
+        config,
+        "\u{1F600}".bright_blue(),
+        " init config succeed.".bright_green()
+    );
+    println!(
+        "\n{}",
+        "please set your environment variable".bright_yellow()
+    );
+    println!("{}", "------------------------------------".bright_yellow());
+    println!("{}", "Bash edit '~/.bashrc' put:".bright_yellow());
+    println!("_____________________________________");
+    println!("  \"export {}={}\"", ENV_KEY, config.config.path);
+    println!("_____________________________________");
+    println!(
+        "{}",
+        "fish edit '~/config/config.fish' put:".bright_yellow()
+    );
+    println!("_____________________________________");
+    println!("if status --is-interactive");
+    println!("  # ...");
+    println!("  # ...");
+    println!("  \"set -x {} {}\"", ENV_KEY, config.config.path);
+    println!("end");
+    println!("_____________________________________");
 }
