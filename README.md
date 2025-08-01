@@ -9,11 +9,18 @@ USAGE:
       - paperpass [GLOBAL OPTIONS] [arg]
 
 GLOBAL OPTIONS:
+
         init : Set Init Config
-          arg:
-             -s : where gpg store
-             -c : where config saved
-             -pk : with pgp key by uid
+          - init [arg]
+              arg:
+                  -s  : where gpg store
+                  -c  : where config saved
+                  -pk : with pgp key by uid
+
+        insert : Set Init Config
+          - insert [path]
+              path: example [your/path]
+
 GLOBAL ARG:
         -list :  List of Pgp Keys
         -h    :  Help
