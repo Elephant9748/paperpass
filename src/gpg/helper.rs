@@ -1,8 +1,7 @@
 use colored::Colorize;
-use std::{
-    path::Path,
-    process::{Command, Stdio},
-};
+use std::process::{Command, Stdio};
+
+use crate::utils::binaries::bin_in_box;
 
 #[derive(Debug)]
 pub struct GpgHelper {
@@ -27,19 +26,7 @@ impl GpgHelper {
 
 // gnupg private keys by uid
 pub fn listprivatekeys() -> Result<Vec<String>, String> {
-    let path_gpg = "/usr/bin/gpg";
-    let path_awk = "/usr/bin/awk";
-    let mut run_bin = Box::new(Vec::new());
-
-    if Path::new(path_gpg).exists() && Path::new(path_awk).exists() {
-        run_bin.push("gpg");
-        run_bin.push("awk");
-    } else {
-        return Err(format!(
-            "{}",
-            ":: binaries gpg or awk doesnt exists ..!".bright_red()
-        ));
-    }
+    let run_bin = bin_in_box().unwrap();
 
     let gpg = Command::new(run_bin[0])
         .args(&["--list-secret-keys", "--with-colons"])

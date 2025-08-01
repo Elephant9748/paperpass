@@ -6,6 +6,7 @@ pub enum Error {
     CantBufRead,
     ResultError,
     EnvNotFound,
+    BinariesNotFound,
 }
 
 pub fn message(err: Error) -> String {
@@ -16,5 +17,6 @@ pub fn message(err: Error) -> String {
         Error::CantBufRead => ":: Error while read contents from bufreader!".to_string(),
         Error::ResultError => ":: ResultError on".to_string(),
         Error::EnvNotFound => ":: Env not Found".to_string(),
+        Error::BinariesNotFound => "Binaries Doesnt Exists.".to_string(),
     }
 }

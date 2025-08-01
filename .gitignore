@@ -1,5 +1,6 @@
 /target
 Cargo.lock
 paperpass.toml
+/configs
 /.config
 /store

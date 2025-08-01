@@ -154,14 +154,13 @@ fn init_done(config: Configs) {
     println!(
         "{:#?}\n{}{}",
         config,
-        "\u{1F600}".bright_blue(),
-        " init config succeed.".bright_green()
+        "::".bright_blue(),
+        " Init config succeed.".bright_green()
     );
     println!(
         "\n{}",
-        "please set your environment variable".bright_yellow()
+        "Please set your environment variable".bright_green()
     );
-    println!("{}", "------------------------------------".bright_yellow());
     println!("{}", "Bash edit '~/.bashrc' put:".bright_yellow());
     println!("_____________________________________");
     println!("  \"export {}={}\"", ENV_KEY, config.config.path);
