@@ -3,7 +3,10 @@ use std::io::{self, Write};
 
 use crate::{
     errors::err::{Error, message},
-    options::options::{Opt, args_options},
+    options::{
+        init_options::{init_options_3, init_options_5, init_options_7},
+        options::{Opt, args_options},
+    },
 };
 
 mod config;
@@ -14,10 +17,6 @@ mod options;
 fn main() {
     let mut paperpass_args: Vec<String> = std::env::args().collect();
     paperpass_args.remove(0);
-
-    let index_a = get_index(paperpass_args.to_owned(), "-s");
-    let index_b = get_index(paperpass_args.to_owned(), "-c");
-    let index_c = get_index(paperpass_args.to_owned(), "-pk");
 
     let mut check_option_double = false;
     match paperpass_args.len() {
@@ -37,80 +36,13 @@ fn main() {
             }
         }
         3 => {
-            if paperpass_args.contains(&"init".to_string())
-                && paperpass_args.contains(&"-s".to_string())
-            {
-                args_options(Opt::InitParams(
-                    paperpass_args[index_a + 1].to_owned(),
-                    "".to_owned(),
-                    "".to_owned(),
-                ));
-            } else if paperpass_args.contains(&"init".to_string())
-                && paperpass_args.contains(&"-c".to_string())
-            {
-                args_options(Opt::InitParams(
-                    "".to_owned(),
-                    paperpass_args[index_b + 1].to_owned(),
-                    "".to_owned(),
-                ));
-            } else if paperpass_args.contains(&"init".to_string())
-                && paperpass_args.contains(&"-pk".to_string())
-            {
-                args_options(Opt::InitParams(
-                    "".to_owned(),
-                    "".to_owned(),
-                    paperpass_args[index_c + 1].to_owned(),
-                ));
-            } else {
-                check_option_double = true
-            }
+            init_options_3(paperpass_args);
         }
         5 => {
-            if paperpass_args.contains(&"init".to_string())
-                && paperpass_args.contains(&"-s".to_string())
-                && paperpass_args.contains(&"-c".to_string())
-            {
-                args_options(Opt::InitParams(
-                    paperpass_args[index_a + 1].to_owned(),
-                    paperpass_args[index_b + 1].to_owned(),
-                    "".to_owned(),
-                ));
-            } else if paperpass_args.contains(&"init".to_string())
-                && paperpass_args.contains(&"-s".to_string())
-                && paperpass_args.contains(&"-pk".to_string())
-            {
-                args_options(Opt::InitParams(
-                    paperpass_args[index_a + 1].to_owned(),
-                    "".to_owned(),
-                    paperpass_args[index_c + 1].to_owned(),
-                ));
-            } else if paperpass_args.contains(&"init".to_string())
-                && paperpass_args.contains(&"-c".to_string())
-                && paperpass_args.contains(&"-pk".to_string())
-            {
-                args_options(Opt::InitParams(
-                    "".to_owned(),
-                    paperpass_args[index_b + 1].to_owned(),
-                    paperpass_args[index_c + 1].to_owned(),
-                ));
-            } else {
-                check_option_double = true
-            }
+            init_options_5(paperpass_args);
         }
         7 => {
-            if paperpass_args.contains(&"init".to_string())
-                && paperpass_args.contains(&"-s".to_string())
-                && paperpass_args.contains(&"-c".to_string())
-                && paperpass_args.contains(&"-pk".to_string())
-            {
-                args_options(Opt::InitParams(
-                    paperpass_args[index_a + 1].to_owned(),
-                    paperpass_args[index_b + 1].to_owned(),
-                    paperpass_args[index_c + 1].to_owned(),
-                ));
-            } else {
-                check_option_double = true
-            }
+            init_options_7(paperpass_args);
         }
         _ => check_option_double = true,
     }
@@ -134,12 +66,4 @@ pub fn catch_stdin() -> String {
         .expect(message(Error::CatchStdin).as_str());
 
     input.trim().to_string()
-}
-
-fn get_index(a: Vec<String>, b: &str) -> usize {
-    let mut index = 0;
-    if a.contains(&b.to_string()) {
-        index = a.iter().position(|mark| mark == &b).unwrap();
-    }
-    index
 }

@@ -104,15 +104,15 @@ pub fn init_config_with_params(opt1: &str, opt2: &str, opt3: &str) {
         opt3
     };
 
-    // force create dir config if doesnt exists
+    // config
     let forcepath = force_create_dir_on_file(&opt2.to_owned());
     println!("{}", forcepath);
-    // where data store
+    // data store
     let store_path = set_store_path(opt1.to_string()).unwrap();
 
     let config = Configs {
         config: Config {
-            path: format!("{}paperpass.toml", forcepath),
+            path: format!("{}/paperpass.toml", forcepath),
             git: false,
         },
         gpg: Gpg {
