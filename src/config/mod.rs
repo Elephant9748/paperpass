@@ -4,6 +4,7 @@ use crate::{
     catch_stdin,
     config::configfile::{set_config_path, set_store_path},
     gpg::helper::{GpgHelper, listprivatekeys},
+    utils::manage_env::{ENV_CONFIG, set_env},
 };
 use colored::Colorize;
 use serde::{Deserialize, Serialize};
@@ -143,13 +144,6 @@ fn force_create_dir_on_file(path: &str) -> String {
     find_dir
 }
 
-static ENV_KEY: &str = "PAPERPASS_CONFIG";
-fn set_env(path: &str) {
-    unsafe {
-        std::env::set_var(ENV_KEY, path);
-    }
-}
-
 fn init_done(config: Configs) {
     println!(
         "{:#?}\n{}{}",
@@ -163,7 +157,7 @@ fn init_done(config: Configs) {
     );
     println!("{}", "Bash edit '~/.bashrc' put:".bright_yellow());
     println!("_____________________________________");
-    println!("  \"export {}={}\"", ENV_KEY, config.config.path);
+    println!("  \"export {}={}\"", ENV_CONFIG, config.config.path);
     println!("_____________________________________");
     println!(
         "{}",
@@ -173,7 +167,7 @@ fn init_done(config: Configs) {
     println!("if status --is-interactive");
     println!("  # ...");
     println!("  # ...");
-    println!("  \"set -x {} {}\"", ENV_KEY, config.config.path);
+    println!("  \"set -x {} {}\"", ENV_CONFIG, config.config.path);
     println!("end");
     println!("_____________________________________");
 }

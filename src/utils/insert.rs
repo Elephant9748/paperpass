@@ -11,10 +11,11 @@ use crate::{
     config::Configs,
     errors::err::{Error, message},
     gpg::lock::encrypt_with_params,
+    utils::manage_env::ENV_CONFIG,
 };
 
 pub fn insert_with_params(params: &str) {
-    let configpath = env::var("PAPERPASS_CONFIG").expect(message(Error::EnvNotFound).as_str());
+    let configpath = env::var(ENV_CONFIG).expect(message(Error::EnvNotFound).as_str());
     let config = read_config_file(&configpath).unwrap();
     let path_to_saved = valid_store_path(config.store.path.as_str());
     let params_to_saved = valid_store_path(params);
