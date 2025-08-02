@@ -63,7 +63,10 @@ pub fn clipboard_copy(params: &str) {
     let filename = read_full_filename(params, &config.store.path);
     let plaintext = decrypt_with_params(&filename);
 
-    let done = clipboard.copy(plaintext.as_str());
+    // copy only the first line
+    let plaintext_vec: Vec<&str> = plaintext.split("\n").collect();
+
+    let done = clipboard.copy(plaintext_vec[0]);
     if !done {
         println!(
             "{}{}",
