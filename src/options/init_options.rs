@@ -13,6 +13,8 @@ pub fn init_options_2(paperpass_args: Vec<String>) {
         ));
     } else if paperpass_args.contains(&"show".to_string()) {
         args_options(Opt::ShowParams(paperpass_args[show_index + 1].to_owned()));
+    } else if paperpass_args.contains(&"-c".to_string()) {
+        args_options(Opt::Copy(paperpass_args[show_index + 1].to_owned()));
     } else {
         println!(
             "{}{}",

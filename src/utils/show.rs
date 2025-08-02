@@ -14,7 +14,8 @@ pub fn show_with_params(params: &str) {
     let filename = read_full_filename(params, &config.store.path);
 
     if Path::new(&filename).exists() {
-        decrypt_with_params(&filename);
+        let decrypt = decrypt_with_params(&filename);
+        println!("{}", decrypt)
     } else {
         println!(
             "{}{}",
@@ -24,7 +25,7 @@ pub fn show_with_params(params: &str) {
     }
 }
 
-fn read_full_filename(path: &str, dir_saved: &str) -> String {
+pub fn read_full_filename(path: &str, dir_saved: &str) -> String {
     // get the name, example: "your/path/file"
     let get_name = path.split("/");
     let mut get_name_vec: Vec<&str> = get_name.collect();

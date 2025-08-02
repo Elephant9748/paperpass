@@ -1,4 +1,5 @@
 pub mod binaries;
+pub mod clipboard;
 pub mod insert;
 pub mod manage_env;
 pub mod show;
