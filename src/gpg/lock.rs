@@ -9,14 +9,12 @@ use crate::utils::binaries::bin_in_box;
 
 pub fn encrypt_with_params(saved_path: &str, plaintext: &str, uid: &str, file_path: &str) -> bool {
     let run_bin = bin_in_box().unwrap();
-    println!("{:#?}", run_bin);
-
     // path output *.asc
     let path_out = saved_path.to_owned() + file_path;
 
     // force create dir & filename
     let output = create_filename(&path_out.to_owned());
-    println!("{}", output);
+    println!("{} Saved to {}", "::".bright_blue(), output);
 
     // encrypt data
     let echo = Command::new(run_bin[2])
@@ -39,7 +37,7 @@ pub fn encrypt_with_params(saved_path: &str, plaintext: &str, uid: &str, file_pa
         .stdin(Stdio::from(echo.stdout.unwrap()))
         .stdout(Stdio::piped())
         .output()
-        .expect(format!("{}", ":: failed to run awk".bright_yellow()).as_str());
+        .expect(format!("{}", ":: failed to run gpg".bright_yellow()).as_str());
 
     if gpg.stderr.is_empty() { true } else { false }
 }

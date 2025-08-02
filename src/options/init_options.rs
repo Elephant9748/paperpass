@@ -5,9 +5,14 @@ use crate::{
 use colored::Colorize;
 
 pub fn init_options_2(paperpass_args: Vec<String>) {
-    let index_a = get_index(paperpass_args.to_owned(), "insert");
+    let insert_index = get_index(paperpass_args.to_owned(), "insert");
+    let show_index = get_index(paperpass_args.to_owned(), "show");
     if paperpass_args.contains(&"insert".to_string()) {
-        args_options(Opt::InsertParams(paperpass_args[index_a + 1].to_owned()));
+        args_options(Opt::InsertParams(
+            paperpass_args[insert_index + 1].to_owned(),
+        ));
+    } else if paperpass_args.contains(&"show".to_string()) {
+        args_options(Opt::ShowParams(paperpass_args[show_index + 1].to_owned()));
     } else {
         println!(
             "{}{}",
