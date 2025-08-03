@@ -3,28 +3,20 @@
 > not ready to be used 
 ## Usage
 ```
-USAGE:
-      - paperpass [GLOBAL OPTIONS]
-      - paperpass [GLOBAL ARG]
-      - paperpass [GLOBAL OPTIONS] [arg]
+Usage: paperpass [COMMAND] [OPTIONS] [ARGS]
+       paperpass [GLOBAL OPTIONS] [ARGS]
 
-GLOBAL OPTIONS:
-        init : set init config
-               - init [arg]
-                 arg:
-                     -s  : where gpg store
-                     -c  : where config saved
-                     -pk : with pgp key by uid
-        insert :
-                  - insert [path]
-                    path: example [your/path]
-        show   :
-                  - show [path]
-                    path: example [your/path]
-GLOBAL ARG:
-        -c    :  Copy to clipboard
-                 - [-c] [path] example: paperpass -c your/path/file
-        -list :  List of Pgp Keys
-        -h    :  Help
-        -v    :  Version
+Options global:
+  -c <YOUR/DATA/STORE>          Copy to clipboard
+  -h                            Print help
+  -v                            Print version
+  -list                         Print list of pgpkey
+
+Command:
+  init                          Set init config generate toml
+      -c <YOUR/CONFIG/PATH>     Where config saved
+      -s <YOUR/DATA/STORE>      Where data store
+      -pk                       Encrypt data with apgp key by uid (name of key)
+  show -s <YOUR/DATA/STORE>     Show secret
+  otp -c <YOUR/DATA/STORE>      Display otp every 30
 ```

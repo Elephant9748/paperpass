@@ -1,26 +1,62 @@
+use colored::Colorize;
+
 pub fn prompt_help() {
-    println!("USAGE:");
-    println!("      - paperpass [GLOBAL OPTIONS]");
-    println!("      - paperpass [GLOBAL ARG]");
-    println!("      - paperpass [GLOBAL OPTIONS] [arg]");
-    println!();
-    println!("GLOBAL OPTIONS: ");
-    println!("\tinit : set init config");
-    println!("\t       - init [arg]");
-    println!("\t         arg:");
-    println!("\t             -s  : where gpg store");
-    println!("\t             -c  : where config saved");
-    println!("\t             -pk : with pgp key by uid");
-    println!("\tinsert :");
-    println!("\t          - insert [path]");
-    println!("\t            path: example [your/path]");
-    println!("\tshow   :");
-    println!("\t          - show [path]");
-    println!("\t            path: example [your/path]");
-    println!("GLOBAL ARG: ");
-    println!("\t-c    :  Copy to clipboard");
-    println!("\t         - [-c] [path] example: paperpass -c your/path/file");
-    println!("\t-list :  List of Pgp Keys");
-    println!("\t-h    :  Help");
-    println!("\t-v    :  Version");
+    let version = env!("CARGO_PKG_VERSION");
+    let build_date = env!("DATE");
+    let git_head_hash = env!("GIT_HASH");
+    print!("{}", "\nUsage: ".green());
+    println!("{}", "paperpass [COMMAND] [OPTIONS] [ARGS]".cyan());
+    println!("{}", "       paperpass [GLOBAL OPTIONS] [ARGS]".cyan());
+    println!("{}", "\nOptions global: ".green());
+    println!(
+        "{}{}",
+        "  -c <YOUR/DATA/STORE>".cyan(),
+        "\t\tCopy to clipboard"
+    );
+    println!("{}{}", "  -h".cyan(), "\t\t\t\tPrint help");
+    println!("{}{}", "  -v".cyan(), "\t\t\t\tPrint version");
+    println!("{}{}", "  -list".cyan(), "\t\t\t\tPrint list of pgpkey");
+    println!("{}", "\nCommand: ".green());
+    println!(
+        "{}{}",
+        "  init".cyan(),
+        "\t\t\t\tSet init config generate toml"
+    );
+    println!(
+        "{}{}",
+        "      -c <YOUR/CONFIG/PATH>".cyan(),
+        "\tWhere config saved"
+    );
+    println!(
+        "{}{}",
+        "      -s <YOUR/DATA/STORE>".cyan(),
+        "\tWhere data store"
+    );
+    println!(
+        "{}{}",
+        "      -pk                 ".cyan(),
+        "\tEncrypt data with apgp key by uid (name of key)"
+    );
+    println!(
+        "{}{}",
+        "  show -s <YOUR/DATA/STORE>".cyan(),
+        "\tShow secret"
+    );
+    // println!(
+    //     "{}{}",
+    //     "      -s <YOUR/DATA/STORE>   ".cyan(),
+    //     "\tDisplay secret with specific path"
+    // );
+    println!(
+        "{}{}",
+        "  otp -c <YOUR/DATA/STORE>".cyan(),
+        "\tDisplay otp every 30"
+    );
+    println!(
+        "\n{}paperpass {} ({} {})",
+        "Version: ".green(),
+        version,
+        git_head_hash,
+        build_date
+    );
 }

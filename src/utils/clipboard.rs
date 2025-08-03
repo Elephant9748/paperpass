@@ -79,14 +79,14 @@ pub fn clipboard_copy(params: &str) {
     // clear clipboard specific time duration
     let clear_clipboard_duration = 30;
     let thread_clip = thread::spawn(move || {
-        Command::new("bash")
+        Command::new("sh")
             .args(&[
                 "-c",
                 format!("sleep {} && wl-copy -c", clear_clipboard_duration).as_str(),
             ])
             .stdout(Stdio::piped())
             .spawn()
-            .expect("Thread failed run clipboard");
+            .expect("Thread failed No bash found.");
     });
 
     if thread_clip.join().is_ok() {
