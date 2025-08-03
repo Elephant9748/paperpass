@@ -1,6 +1,7 @@
 use std::{
     env,
     process::{Command, Stdio},
+    thread,
 };
 
 use colored::Colorize;
@@ -73,5 +74,27 @@ pub fn clipboard_copy(params: &str) {
             "::".bright_blue(),
             "Copy to clipboard failed".bright_red()
         )
+    }
+
+    // clear clipboard specific time duration
+    let clear_clipboard_duration = 30;
+    let thread_clip = thread::spawn(move || {
+        Command::new("bash")
+            .args(&[
+                "-c",
+                format!("sleep {} && wl-copy -c", clear_clipboard_duration).as_str(),
+            ])
+            .stdout(Stdio::piped())
+            .spawn()
+            .expect("Thread failed run clipboard");
+    });
+
+    if thread_clip.join().is_ok() {
+        print!(
+            "{}{}{}",
+            "::".bright_blue(),
+            " Clipboard clear after".bright_yellow(),
+            format!(" {} sec", clear_clipboard_duration).bright_green()
+        );
     }
 }
