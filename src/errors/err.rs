@@ -7,6 +7,7 @@ pub enum Error {
     ResultError,
     EnvNotFound,
     BinariesNotFound,
+    CopyClipFailed,
 }
 
 pub fn message(err: Error) -> String {
@@ -18,5 +19,6 @@ pub fn message(err: Error) -> String {
         Error::ResultError => ":: ResultError on".to_string(),
         Error::EnvNotFound => ":: Env not Found".to_string(),
         Error::BinariesNotFound => "Binaries Doesnt Exists.".to_string(),
+        Error::CopyClipFailed => "Copy to clipboard failed.".to_string(),
     }
 }

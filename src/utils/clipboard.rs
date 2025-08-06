@@ -16,20 +16,20 @@ use crate::{
     },
 };
 
-struct Clip<'a> {
-    session_type: &'a str,
-    bin: &'a str,
+pub struct Clip<'a> {
+    pub session_type: &'a str,
+    pub bin: &'a str,
 }
 
 impl<'a> Clip<'a> {
-    fn new(session: &'a str) -> Self {
+    pub fn new(session: &'a str) -> Self {
         Self {
             session_type: session,
             bin: "",
         }
     }
 
-    fn get_binaries(&mut self) -> Option<&'a str> {
+    pub fn get_binaries(&mut self) -> Option<&'a str> {
         if self.session_type == "wayland" {
             self.bin = "wl-copy";
             Some("wl-copy")
@@ -38,18 +38,43 @@ impl<'a> Clip<'a> {
         }
     }
 
-    fn copy(&self, plaintext: &'a str) -> bool {
-        let copy = Command::new(self.bin)
+    pub fn copy(&self, plaintext: &'a str) {
+        Command::new(self.bin)
             .args(&[plaintext])
             .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
             .spawn()
-            .expect(format!("Failed to run {}", self.bin).as_str());
+            .expect(format!("{} {}", message(Error::CopyClipFailed), self.bin).as_str());
+    }
 
-        if copy.stderr.is_none() { true } else { false }
+    pub fn clear_clipboard(&mut self, timeout: i32) {
+        if let Some(clip) = self.get_binaries() {
+            let clear_clipboard_duration = timeout;
+            let clip_bin = clip.to_owned();
+            let thread_clip = thread::spawn(move || {
+                Command::new("sh")
+                    .args(&[
+                        "-c",
+                        format!("sleep {} && {} -c", clear_clipboard_duration, clip_bin).as_str(),
+                    ])
+                    .stdout(Stdio::piped())
+                    .spawn()
+                    .expect("Thread failed No bash found.");
+            });
+
+            if thread_clip.join().is_ok() {
+                print!(
+                    "{}{}{}",
+                    "::".bright_blue(),
+                    " Clipboard clear after".bright_yellow(),
+                    format!(" {} sec", clear_clipboard_duration).bright_green()
+                );
+            }
+        }
     }
 }
 
-pub fn clipboard_copy(params: &str) {
+pub fn clipboard_copy(params: &str, timeout: i32) {
     let session = env::var(SESSION).unwrap();
     let mut clipboard = Clip::new(session.as_str());
     if clipboard.get_binaries().is_none() {
@@ -59,6 +84,7 @@ pub fn clipboard_copy(params: &str) {
         )
     }
 
+    // get full path
     let configpath = env::var(ENV_CONFIG).expect(message(Error::EnvNotFound).as_str());
     let config = read_config_file(&configpath).unwrap();
     let filename = read_full_filename(params, &config.store.path);
@@ -66,35 +92,8 @@ pub fn clipboard_copy(params: &str) {
 
     // copy only the first line
     let plaintext_vec: Vec<&str> = plaintext.split("\n").collect();
+    clipboard.copy(plaintext_vec[0]);
 
-    let done = clipboard.copy(plaintext_vec[0]);
-    if !done {
-        println!(
-            "{}{}",
-            "::".bright_blue(),
-            "Copy to clipboard failed".bright_red()
-        )
-    }
-
-    // clear clipboard specific time duration
-    let clear_clipboard_duration = 30;
-    let thread_clip = thread::spawn(move || {
-        Command::new("sh")
-            .args(&[
-                "-c",
-                format!("sleep {} && wl-copy -c", clear_clipboard_duration).as_str(),
-            ])
-            .stdout(Stdio::piped())
-            .spawn()
-            .expect("Thread failed No bash found.");
-    });
-
-    if thread_clip.join().is_ok() {
-        print!(
-            "{}{}{}",
-            "::".bright_blue(),
-            " Clipboard clear after".bright_yellow(),
-            format!(" {} sec", clear_clipboard_duration).bright_green()
-        );
-    }
+    // clear clipboard specific time duration, default timeout is 30 in fn init_options_4
+    clipboard.clear_clipboard(timeout);
 }

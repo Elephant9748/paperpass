@@ -4,7 +4,9 @@ use std::io::{self, Write};
 use crate::{
     errors::err::{Error, message},
     options::{
-        init_options::{init_options_2, init_options_3, init_options_5, init_options_7},
+        init_options::{
+            init_options_2, init_options_3, init_options_4, init_options_5, init_options_7,
+        },
         options::{Opt, args_options},
     },
 };
@@ -38,6 +40,7 @@ fn main() {
         }
         2 => init_options_2(paperpass_args),
         3 => init_options_3(paperpass_args),
+        4 => init_options_4(paperpass_args),
         5 => init_options_5(paperpass_args),
         7 => init_options_7(paperpass_args),
         _ => check_option_double = true,

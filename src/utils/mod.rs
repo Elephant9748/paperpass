@@ -3,6 +3,7 @@ pub mod clipboard;
 pub mod insert;
 pub mod manage_env;
 pub mod show;
+pub mod totp;
 
 use std::{
     fs::File,

@@ -6,8 +6,10 @@ edition = "2024"
 [dependencies]
 chrono = "0.4.41"
 colored = "3.0.0"
+crossterm = "0.29.0"
 serde = { version = "1.0.219", features = ["derive"] }
 toml = "0.9.4"
+totp-rs = { version = "5.7.0", features = ["otpauth", "url"] }
 
 [build-dependencies]
 chrono = "0.4.41"

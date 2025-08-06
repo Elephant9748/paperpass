@@ -13,6 +13,11 @@ pub fn prompt_help() {
         "  -c <YOUR/DATA/STORE>".cyan(),
         "\t\tCopy to clipboard"
     );
+    println!(
+        "{}{}",
+        "     --time <TIME>".cyan(),
+        "\t\tCopy to clipboard with autoclear after amount of sec TIME=NUMBER default is 30 sec"
+    );
     println!("{}{}", "  -h".cyan(), "\t\t\t\tPrint help");
     println!("{}{}", "  -v".cyan(), "\t\t\t\tPrint version");
     println!("{}{}", "  -list".cyan(), "\t\t\t\tPrint list of pgpkey");
@@ -42,18 +47,13 @@ pub fn prompt_help() {
         "  show -s <YOUR/DATA/STORE>".cyan(),
         "\tShow secret"
     );
-    // println!(
-    //     "{}{}",
-    //     "      -s <YOUR/DATA/STORE>   ".cyan(),
-    //     "\tDisplay secret with specific path"
-    // );
     println!(
         "{}{}",
-        "  otp -c <YOUR/DATA/STORE>".cyan(),
+        "  totp -c <YOUR/DATA/STORE>".cyan(),
         "\tDisplay otp every 30"
     );
     println!(
-        "\n{}paperpass {} ({} {})",
+        "\n{}paperpass {} ({} {})\n",
         "Version: ".green(),
         version,
         git_head_hash,

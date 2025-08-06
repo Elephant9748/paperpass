@@ -14,7 +14,13 @@ pub fn init_options_2(paperpass_args: Vec<String>) {
     } else if paperpass_args.contains(&"show".to_string()) {
         args_options(Opt::ShowParams(paperpass_args[show_index + 1].to_owned()));
     } else if paperpass_args.contains(&"-c".to_string()) {
-        args_options(Opt::Copy(paperpass_args[show_index + 1].to_owned()));
+        // default clear clipboard timeout is 30sec
+        args_options(Opt::Copy(paperpass_args[show_index + 1].to_owned(), 30));
+    } else if paperpass_args.contains(&"totp".to_string()) {
+        args_options(Opt::TotpCreate(
+            paperpass_args[show_index + 1].to_owned(),
+            0,
+        ));
     } else {
         println!(
             "{}{}",
@@ -49,6 +55,31 @@ pub fn init_options_3(paperpass_args: Vec<String>) {
             "".to_owned(),
             "".to_owned(),
             paperpass_args[index_c + 1].to_owned(),
+        ));
+    } else if paperpass_args.contains(&"totp".to_string())
+        && paperpass_args.contains(&"-c".to_string())
+    {
+        // default clear clipboard timeout is 30sec
+        args_options(Opt::TotpCreate(paperpass_args[index_b + 1].to_owned(), 30));
+    } else {
+        println!(
+            "{}{}",
+            "::".bright_blue(),
+            message(Error::OptionsNotFound).bright_yellow()
+        );
+    }
+}
+
+pub fn init_options_4(paperpass_args: Vec<String>) {
+    let index_a = get_index(paperpass_args.to_owned(), "-c");
+    let index_b = get_index(paperpass_args.to_owned(), "-time");
+    if paperpass_args.contains(&"-c".to_string()) && paperpass_args.contains(&"-time".to_string()) {
+        args_options(Opt::Copy(
+            paperpass_args[index_a + 1].to_owned(),
+            paperpass_args[index_b + 1]
+                .to_owned()
+                .parse::<i32>()
+                .unwrap(),
         ));
     } else {
         println!(

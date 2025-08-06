@@ -8,6 +8,7 @@ Usage: paperpass [COMMAND] [OPTIONS] [ARGS]
 
 Options global:
   -c <YOUR/DATA/STORE>          Copy to clipboard
+     --time <TIME>              Copy to clipboard with autoclear after amunt of sec TIME=NUMBER
   -h                            Print help
   -v                            Print version
   -list                         Print list of pgpkey
