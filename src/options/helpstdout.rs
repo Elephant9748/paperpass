@@ -49,8 +49,13 @@ pub fn prompt_help() {
     );
     println!(
         "{}{}",
+        "  totp <YOUR/DATA/STORE>".cyan(),
+        "\tDisplay totp every 30"
+    );
+    println!(
+        "{}{}",
         "  totp -c <YOUR/DATA/STORE>".cyan(),
-        "\tDisplay otp every 30"
+        "\tCopy totp into clipboard"
     );
     println!(
         "\n{}paperpass {} ({} {})\n",
