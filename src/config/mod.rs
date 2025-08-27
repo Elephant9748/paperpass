@@ -2,7 +2,7 @@ pub mod configfile;
 
 use crate::{
     catch_stdin,
-    config::configfile::{set_config_path, set_store_path},
+    config::configfile::{set_config_path, set_git, set_store_path},
     gpg::helper::{GpgHelper, listprivatekeys},
     utils::manage_env::{ENV_CONFIG, set_env},
 };
@@ -67,10 +67,15 @@ pub fn init_config() {
     let input = catch_stdin();
     let store_path = set_store_path(input).unwrap();
 
+    // store include git
+    print!("\n{}", "Use git init default n (y/n)? ".bright_white());
+    let input = catch_stdin();
+    let store_git = set_git(input);
+
     let config = Configs {
         config: Config {
             path: input_config_path,
-            git: false,
+            git: store_git.unwrap(),
         },
         gpg: Gpg {
             key: format!(
@@ -92,7 +97,7 @@ pub fn init_config() {
 }
 
 // init config with params
-pub fn init_config_with_params(opt1: &str, opt2: &str, opt3: &str) {
+pub fn init_config_with_params(opt1: &str, opt2: &str, opt3: &str, opt4: &str) {
     let recipient = GpgHelper::new(listprivatekeys().unwrap());
 
     let opt1 = if opt1.is_empty() { "store/" } else { opt1 };
@@ -115,10 +120,13 @@ pub fn init_config_with_params(opt1: &str, opt2: &str, opt3: &str) {
     // data store
     let store_path = set_store_path(opt1.to_string()).unwrap();
 
+    //store with git
+    let store_git = set_git(opt4.to_string());
+
     let config = Configs {
         config: Config {
             path: configpath.to_owned(),
-            git: false,
+            git: store_git.unwrap(),
         },
         gpg: Gpg {
             key: opt3.to_string(),

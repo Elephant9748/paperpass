@@ -87,6 +87,14 @@ pub fn set_store_path(p: String) -> Result<String, String> {
     }
 }
 
+pub fn set_git(g: String) -> Result<bool, String> {
+    if g == "y" || g == "Y" {
+        Ok(true)
+    } else {
+        Ok(false)
+    }
+}
+
 fn force_create_dir(b: String) -> String {
     if !Path::new(&b).exists() {
         std::fs::create_dir(b.to_owned()).expect(":: set_store_path failed create store/");

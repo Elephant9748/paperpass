@@ -10,7 +10,7 @@ use crate::{
 
 pub enum Opt {
     Init,
-    InitParams(String, String, String),
+    InitParams(String, String, String, String),
     InsertParams(String),
     ShowParams(String),
     Copy(String, i32),
@@ -24,7 +24,9 @@ pub enum Opt {
 pub fn args_options(opt: Opt) {
     match opt {
         Opt::Init => init_config(),
-        Opt::InitParams(a, b, c) => init_config_with_params(a.as_str(), b.as_str(), c.as_str()),
+        Opt::InitParams(a, b, c, d) => {
+            init_config_with_params(a.as_str(), b.as_str(), c.as_str(), d.as_str())
+        }
         Opt::InsertParams(a) => insert_with_params(a.as_str()),
         Opt::ShowParams(a) => show_with_params(a.as_str()),
         Opt::Copy(a, b) => clipboard_copy(a.as_str(), b),
