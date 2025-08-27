@@ -1,5 +1,6 @@
 pub mod binaries;
 pub mod clipboard;
+pub mod edit;
 pub mod git;
 pub mod insert;
 pub mod ls;

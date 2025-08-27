@@ -44,6 +44,11 @@ pub fn prompt_help() {
     );
     println!(
         "{}{}",
+        "  insert  <YOUR/DATA/STORE>".cyan(),
+        "\tInsert new secret."
+    );
+    println!(
+        "{}{}",
         "  show -s <YOUR/DATA/STORE>".cyan(),
         "\tShow secret"
     );
