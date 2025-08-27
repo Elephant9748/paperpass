@@ -57,6 +57,7 @@ pub fn prompt_help() {
         "  totp -c <YOUR/DATA/STORE>".cyan(),
         "\tCopy totp into clipboard"
     );
+    println!("{}{}", "  ls <YOUR/DATA/STORE>".cyan(), "\tList of secrets");
     println!(
         "\n{}paperpass {} ({} {})\n",
         "Version: ".green(),
