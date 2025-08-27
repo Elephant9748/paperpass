@@ -154,7 +154,7 @@ fn force_create_dir_on_file(path: &str) -> String {
 
 fn init_done(config: Configs) {
     println!(
-        "{:#?}\n{}{}",
+        "\x1b[36m{:#?}\n{}{}",
         config,
         "::".bright_blue(),
         " Init config succeed.".bright_green()
