@@ -18,10 +18,12 @@ Command:
       -c <YOUR/CONFIG/PATH>     Where config saved
       -s <YOUR/DATA/STORE>      Where data store
       -pk                       Encrypt data with apgp key by uid (name of key)
+  insert  <YOUR/DATA/STORE>     Insert new secret.
+  edit    <YOUR/DATA/STORE>     Edit secret.
   show -s <YOUR/DATA/STORE>     Show secret
-  totp <YOUR/DATA/STORE>        Display totp every 30
+  totp    <YOUR/DATA/STORE>     Display totp every 30
   totp -c <YOUR/DATA/STORE>     Copy totp into clipboard
-  ls   <YOUR/DATA/STORE>        List of secrets
+  ls      <YOUR/DATA/STORE>     List of secrets
 ```
 
 ### format password with otpauth

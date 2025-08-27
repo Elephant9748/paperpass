@@ -49,6 +49,11 @@ pub fn prompt_help() {
     );
     println!(
         "{}{}",
+        "  edit    <YOUR/DATA/STORE>".cyan(),
+        "\tEdit secret."
+    );
+    println!(
+        "{}{}",
         "  show -s <YOUR/DATA/STORE>".cyan(),
         "\tShow secret"
     );
