@@ -49,7 +49,7 @@ pub fn prompt_help() {
     );
     println!(
         "{}{}",
-        "  totp <YOUR/DATA/STORE>".cyan(),
+        "  totp    <YOUR/DATA/STORE>".cyan(),
         "\tDisplay totp every 30"
     );
     println!(
@@ -57,7 +57,11 @@ pub fn prompt_help() {
         "  totp -c <YOUR/DATA/STORE>".cyan(),
         "\tCopy totp into clipboard"
     );
-    println!("{}{}", "  ls <YOUR/DATA/STORE>".cyan(), "\tList of secrets");
+    println!(
+        "{}{}",
+        "  ls      <YOUR/DATA/STORE>".cyan(),
+        "\tList of secrets"
+    );
     println!(
         "\n{}paperpass {} ({} {})\n",
         "Version: ".green(),

@@ -21,7 +21,7 @@ Command:
   show -s <YOUR/DATA/STORE>     Show secret
   totp <YOUR/DATA/STORE>        Display totp every 30
   totp -c <YOUR/DATA/STORE>     Copy totp into clipboard
-  ls <YOUR/DATA/STORE>  List of secrets
+  ls   <YOUR/DATA/STORE>        List of secrets
 ```
 
 ### format password with otpauth
