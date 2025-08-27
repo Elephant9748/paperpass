@@ -21,6 +21,8 @@ pub fn init_options_2(paperpass_args: Vec<String>) {
             paperpass_args[show_index + 1].to_owned(),
             0,
         ));
+    } else if paperpass_args.contains(&"ls".to_string()) {
+        args_options(Opt::ListDir(paperpass_args[show_index + 1].to_owned()));
     } else {
         println!(
             "{}{}",

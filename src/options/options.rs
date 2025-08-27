@@ -3,8 +3,8 @@ use crate::{
     gpg::helper::{GpgHelper, listprivatekeys},
     options::helpstdout::prompt_help,
     utils::{
-        clipboard::clipboard_copy, insert::insert_with_params, show::show_with_params,
-        totp::totp_create,
+        clipboard::clipboard_copy, insert::insert_with_params, ls::list_dir_with_params,
+        show::show_with_params, totp::totp_create,
     },
 };
 
@@ -16,6 +16,7 @@ pub enum Opt {
     Copy(String, i32),
     ListRecepients(String),
     TotpCreate(String, i32),
+    ListDir(String),
     Help,
     Version,
 }
@@ -28,6 +29,7 @@ pub fn args_options(opt: Opt) {
         Opt::ShowParams(a) => show_with_params(a.as_str()),
         Opt::Copy(a, b) => clipboard_copy(a.as_str(), b),
         Opt::TotpCreate(a, b) => totp_create(a.as_str(), b),
+        Opt::ListDir(a) => list_dir_with_params(a.as_str()),
         Opt::ListRecepients(_a) => {
             let pk = GpgHelper::new(listprivatekeys().unwrap());
             println!("{:?}", pk.get_by_name("brandon"));

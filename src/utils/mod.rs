@@ -1,6 +1,7 @@
 pub mod binaries;
 pub mod clipboard;
 pub mod insert;
+pub mod ls;
 pub mod manage_env;
 pub mod show;
 pub mod totp;
