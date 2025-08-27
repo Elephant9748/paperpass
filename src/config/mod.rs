@@ -28,7 +28,7 @@ pub struct Gpg {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Config {
     pub path: String,
-    git: bool,
+    pub git: bool,
 }
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Store {

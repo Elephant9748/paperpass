@@ -6,7 +6,7 @@ use crate::{
     catch_stdin,
     errors::err::{Error, message},
     gpg::lock::encrypt_with_params,
-    utils::{manage_env::ENV_CONFIG, read_config_file, valid_store_path},
+    utils::{git::git_commit, manage_env::ENV_CONFIG, read_config_file, valid_store_path},
 };
 
 pub fn insert_with_params(params: &str) {
@@ -28,8 +28,15 @@ pub fn insert_with_params(params: &str) {
     );
 
     if go_encrypt {
-        println!("{}{}", "::".bright_blue(), " Insert Ok.")
+        println!("{}{}", "::".bright_blue(), " Encrypt Ok.")
     } else {
-        println!("{}{}", "::".bright_blue(), " Insert Failed.")
+        println!("{}{}", "::".bright_blue(), " Encrypt Failed.")
+    }
+
+    //git commit
+    if config.config.git {
+        git_commit(config.store.path.as_str(), params_to_saved);
+    } else {
+        println!("{}{}", "::".bright_blue(), " Git commit false.");
     }
 }
