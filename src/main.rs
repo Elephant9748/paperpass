@@ -6,7 +6,7 @@ use crate::{
     options::{
         init_options::{
             init_options_2, init_options_3, init_options_4, init_options_5, init_options_6,
-            init_options_7, init_options_8,
+            init_options_8,
         },
         options::{Opt, args_options},
     },
@@ -44,7 +44,6 @@ fn main() {
         4 => init_options_4(paperpass_args),
         5 => init_options_5(paperpass_args),
         6 => init_options_6(paperpass_args),
-        7 => init_options_7(paperpass_args),
         8 => init_options_8(paperpass_args),
         _ => check_option_double = true,
     }

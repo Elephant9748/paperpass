@@ -2,7 +2,7 @@ pub mod configfile;
 
 use crate::{
     catch_stdin,
-    config::configfile::{set_config_path, set_git, set_store_path},
+    config::configfile::{git_init, set_config_path, set_git, set_store_path},
     gpg::helper::{GpgHelper, listprivatekeys},
     utils::manage_env::{ENV_CONFIG, set_env},
 };
@@ -71,6 +71,8 @@ pub fn init_config() {
     print!("\n{}", "Use git init default n (y/n)? ".bright_white());
     let input = catch_stdin();
     let store_git = set_git(input);
+    // git init in store
+    let _ = git_init(store_git.to_owned().unwrap(), store_path.to_owned()).unwrap();
 
     let config = Configs {
         config: Config {
@@ -122,6 +124,8 @@ pub fn init_config_with_params(opt1: &str, opt2: &str, opt3: &str, opt4: &str) {
 
     //store with git
     let store_git = set_git(opt4.to_string());
+    // git init in store
+    let _ = git_init(store_git.to_owned().unwrap(), store_path.to_owned()).unwrap();
 
     let config = Configs {
         config: Config {
@@ -157,7 +161,7 @@ fn init_done(config: Configs) {
         "\x1b[36m{:#?}\n{}{}",
         config,
         "::".bright_blue(),
-        " Init config succeed.".bright_green()
+        " Write config file succeed.".bright_green()
     );
     println!(
         "\n{}",

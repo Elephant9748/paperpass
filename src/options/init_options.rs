@@ -70,15 +70,6 @@ pub fn init_options_3(paperpass_args: Vec<String>) {
             paperpass_args[index_c + 1].to_owned(),
             "".to_owned(),
         ));
-    } else if paperpass_args.contains(&"init".to_string())
-        && paperpass_args.contains(&"-git".to_string())
-    {
-        args_options(Opt::InitParams(
-            "".to_owned(),
-            "".to_owned(),
-            "".to_owned(),
-            "y".to_owned(),
-        ));
     } else if paperpass_args.contains(&"totp".to_string())
         && paperpass_args.contains(&"-c".to_string())
     {
@@ -96,6 +87,7 @@ pub fn init_options_3(paperpass_args: Vec<String>) {
 pub fn init_options_4(paperpass_args: Vec<String>) {
     let index_a = get_index(paperpass_args.to_owned(), "-c");
     let index_b = get_index(paperpass_args.to_owned(), "-time");
+    let index_c = get_index(paperpass_args.to_owned(), "-pk");
     if paperpass_args.contains(&"-c".to_string()) && paperpass_args.contains(&"-time".to_string()) {
         args_options(Opt::Copy(
             paperpass_args[index_a + 1].to_owned(),
@@ -105,12 +97,13 @@ pub fn init_options_4(paperpass_args: Vec<String>) {
                 .unwrap(),
         ));
     } else if paperpass_args.contains(&"init".to_string())
+        && paperpass_args.contains(&"-pk".to_string())
         && paperpass_args.contains(&"-git".to_string())
     {
         args_options(Opt::InitParams(
             "".to_owned(),
             "".to_owned(),
-            "".to_owned(),
+            paperpass_args[index_c + 1].to_owned(),
             "y".to_owned(),
         ));
     } else {
@@ -156,15 +149,6 @@ pub fn init_options_5(paperpass_args: Vec<String>) {
             paperpass_args[index_c + 1].to_owned(),
             "".to_owned(),
         ));
-    } else if paperpass_args.contains(&"init".to_string())
-        && paperpass_args.contains(&"-git".to_string())
-    {
-        args_options(Opt::InitParams(
-            "".to_owned(),
-            "".to_owned(),
-            "".to_owned(),
-            "y".to_owned(),
-        ));
     } else {
         println!(
             "{}{}",
@@ -175,45 +159,29 @@ pub fn init_options_5(paperpass_args: Vec<String>) {
 }
 
 pub fn init_options_6(paperpass_args: Vec<String>) {
-    if paperpass_args.contains(&"init".to_string()) && paperpass_args.contains(&"-git".to_string())
-    {
-        args_options(Opt::InitParams(
-            "".to_owned(),
-            "".to_owned(),
-            "".to_owned(),
-            "y".to_owned(),
-        ));
-    } else {
-        println!(
-            "{}{}",
-            "::".bright_blue(),
-            message(Error::OptionsNotFound).bright_yellow()
-        );
-    }
-}
-
-pub fn init_options_7(paperpass_args: Vec<String>) {
     let index_a = get_index(paperpass_args.to_owned(), "-s");
-    let index_b = get_index(paperpass_args.to_owned(), "-c");
     let index_c = get_index(paperpass_args.to_owned(), "-pk");
+    let index_b = get_index(paperpass_args.to_owned(), "-c");
     if paperpass_args.contains(&"init".to_string())
-        && paperpass_args.contains(&"-s".to_string())
-        && paperpass_args.contains(&"-c".to_string())
         && paperpass_args.contains(&"-pk".to_string())
-    {
-        args_options(Opt::InitParams(
-            paperpass_args[index_a + 1].to_owned(),
-            paperpass_args[index_b + 1].to_owned(),
-            paperpass_args[index_c + 1].to_owned(),
-            "".to_owned(),
-        ));
-    } else if paperpass_args.contains(&"init".to_string())
+        && paperpass_args.contains(&"-s".to_string())
         && paperpass_args.contains(&"-git".to_string())
     {
         args_options(Opt::InitParams(
             "".to_owned(),
+            paperpass_args[index_b + 1].to_owned(),
+            paperpass_args[index_c + 1].to_owned(),
+            "y".to_owned(),
+        ));
+    } else if paperpass_args.contains(&"init".to_string())
+        && paperpass_args.contains(&"-pk".to_string())
+        && paperpass_args.contains(&"-c".to_string())
+        && paperpass_args.contains(&"-git".to_string())
+    {
+        args_options(Opt::InitParams(
+            paperpass_args[index_a + 1].to_owned(),
             "".to_owned(),
-            "".to_owned(),
+            paperpass_args[index_c + 1].to_owned(),
             "y".to_owned(),
         ));
     } else {
@@ -226,12 +194,18 @@ pub fn init_options_7(paperpass_args: Vec<String>) {
 }
 
 pub fn init_options_8(paperpass_args: Vec<String>) {
-    if paperpass_args.contains(&"init".to_string()) && paperpass_args.contains(&"-git".to_string())
+    let index_a = get_index(paperpass_args.to_owned(), "-s");
+    let index_b = get_index(paperpass_args.to_owned(), "-c");
+    let index_c = get_index(paperpass_args.to_owned(), "-pk");
+    if paperpass_args.contains(&"init".to_string())
+        && paperpass_args.contains(&"-pk".to_string())
+        && paperpass_args.contains(&"-c".to_string())
+        && paperpass_args.contains(&"-git".to_string())
     {
         args_options(Opt::InitParams(
-            "".to_owned(),
-            "".to_owned(),
-            "".to_owned(),
+            paperpass_args[index_a + 1].to_owned(),
+            paperpass_args[index_b + 1].to_owned(),
+            paperpass_args[index_c + 1].to_owned(),
             "y".to_owned(),
         ));
     } else {

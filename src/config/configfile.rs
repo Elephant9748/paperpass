@@ -1,11 +1,11 @@
 use std::{
-    env,
+    env, io,
     path::{Path, PathBuf},
 };
 
 use colored::Colorize;
 
-use crate::catch_stdin;
+use crate::{catch_stdin, utils::git::git_init_run};
 
 enum Valid {
     Num(String),
@@ -93,6 +93,13 @@ pub fn set_git(g: String) -> Result<bool, String> {
     } else {
         Ok(false)
     }
+}
+
+pub fn git_init(init: bool, store: String) -> io::Result<()> {
+    if init {
+        let _ = git_init_run(store.as_str());
+    }
+    Ok(())
 }
 
 fn force_create_dir(b: String) -> String {
