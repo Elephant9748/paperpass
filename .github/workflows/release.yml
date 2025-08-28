@@ -44,7 +44,8 @@ jobs:
       - name: Create GitHub release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release create $VERSION --draft --verify-tag --latest --notes-from-tag --title paperpass-$VERSION
+        # run: gh release create $VERSION --draft --verify-tag --latest --notes-from-tag --title paperpass-$VERSION
+        run: gh release create $VERSION --d --latest --generate-notes --title paperpass-$VERSION
     outputs:
       version: ${{ env.VERSION }}
 
