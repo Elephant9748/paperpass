@@ -30,18 +30,18 @@ pub fn prompt_help() {
     );
     println!(
         "{}{}",
-        "      -c <YOUR/CONFIG/PATH>".cyan(),
-        "\tWhere config saved"
+        "      -c ~/<YOUR CONFIG PATH>".cyan(),
+        "\tWhere config saved, must have ~/ or the full path"
     );
     println!(
         "{}{}",
-        "      -s <YOUR/DATA/STORE>".cyan(),
-        "\tWhere data store"
+        "      -s ~/<YOUR DATA STORE>".cyan(),
+        "\tWhere data store must have ~/ or the full path"
     );
     println!(
         "{}{}",
-        "      -pk                 ".cyan(),
-        "\tEncrypt data with apgp key by uid (name of key)"
+        "      -pk <YOUR PGP KEY>".cyan(),
+        "\tSet which key to used (name of key)"
     );
     println!(
         "{}{}",

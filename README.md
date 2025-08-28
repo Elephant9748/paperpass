@@ -16,9 +16,9 @@ Options global:
 
 Command:
   init                          Set init config generate toml
-      -c <YOUR/CONFIG/PATH>     Where config saved
-      -s <YOUR/DATA/STORE>      Where data store
-      -pk                       Encrypt data with apgp key by uid (name of key)
+      -c ~/<YOUR CONFIG PATH>   Where config saved, must have ~/ or the full path
+      -s ~/<YOUR DATA STORE>    Where data store must have ~/ or the full path
+      -pk <YOUR PGP KEY>        Set which key to used (name of key)
   insert  <YOUR/DATA/STORE>     Insert new secret.
   edit    <YOUR/DATA/STORE>     Edit secret.
   show -s <YOUR/DATA/STORE>     Show secret

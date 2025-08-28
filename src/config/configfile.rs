@@ -51,7 +51,7 @@ pub fn set_options_config_path() -> Result<&'static str, String> {
     );
     let input_path = catch_stdin();
     if input_path.is_empty() {
-        Ok("")
+        Ok("~/.config/paperpass")
     } else {
         let mut path = "paperpass.toml";
         if check_valid(Valid::Num(input_path.to_owned())) {
@@ -79,7 +79,8 @@ pub fn set_config_path(p: String) -> Result<String, String> {
     } else if p.is_empty() {
         let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
         let mut default_path = PathBuf::from(home_dir);
-        default_path.push("/paperpass");
+        default_path.push("paperpass");
+        println!("{}", default_path.display().to_string());
         let path = force_create_dir(default_path.display().to_string());
         Ok(path.into())
     } else {
@@ -102,7 +103,8 @@ pub fn set_store_path(p: String) -> Result<String, String> {
     } else if p.is_empty() {
         let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
         let mut default_path = PathBuf::from(home_dir);
-        default_path.push("/store");
+        default_path.push("store");
+        println!("{}", default_path.display().to_string());
         let path = force_create_dir(default_path.display().to_string());
         Ok(path.into())
     } else {
