@@ -53,7 +53,7 @@ impl Totp {
                 "{}{}{}{}{}",
                 "Oops".bright_yellow(),
                 " not running wayland ".bright_red(),
-                ENV_CONFIG.bright_yellow(),
+                SESSION.bright_yellow(),
                 ": ".bright_yellow(),
                 self.session.bright_green()
             );
