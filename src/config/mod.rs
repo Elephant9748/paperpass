@@ -1,4 +1,5 @@
 pub mod configfile;
+pub mod showconfig;
 
 use crate::{
     catch_stdin,

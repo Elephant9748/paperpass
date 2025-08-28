@@ -12,6 +12,7 @@ Options global:
   -h                            Print help
   -v                            Print version
   -lk                           Print list of pgpkey
+  -config                       Show config json
 
 Command:
   init                          Set init config generate toml

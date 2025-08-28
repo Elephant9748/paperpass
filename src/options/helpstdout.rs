@@ -21,6 +21,7 @@ pub fn prompt_help() {
     println!("{}{}", "  -h".cyan(), "\t\t\t\tPrint help");
     println!("{}{}", "  -v".cyan(), "\t\t\t\tPrint version");
     println!("{}{}", "  -lk".cyan(), "\t\t\t\tPrint list of pgpkey");
+    println!("{}{}", "  -config".cyan(), "\t\t\tShow config json");
     println!("{}", "\nCommand: ".green());
     println!(
         "{}{}",

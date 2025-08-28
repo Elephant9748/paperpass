@@ -1,7 +1,7 @@
 use colored::Colorize;
 
 use crate::{
-    config::{init_config, init_config_with_params},
+    config::{init_config, init_config_with_params, showconfig::show_config},
     gpg::helper::{GpgHelper, listprivatekeys},
     options::helpstdout::prompt_help,
     utils::{
@@ -17,6 +17,7 @@ pub enum Opt {
     EditParams(String),
     ShowParams(String),
     Copy(String, i32),
+    ShowConfig,
     ListRecepients(String),
     TotpCreate(String, i32),
     ListDir(String),
@@ -36,6 +37,7 @@ pub fn args_options(opt: Opt) {
         Opt::Copy(a, b) => clipboard_copy(a.as_str(), b),
         Opt::TotpCreate(a, b) => totp_create(a.as_str(), b),
         Opt::ListDir(a) => list_dir_with_params(a.as_str()),
+        Opt::ShowConfig => show_config(),
         Opt::ListRecepients(_a) => {
             let pk = GpgHelper::new(listprivatekeys().unwrap());
             println!(
