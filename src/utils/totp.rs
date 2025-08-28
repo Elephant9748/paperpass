@@ -49,7 +49,7 @@ impl Totp {
         if self.session == "wayland" {
             self.full_path = full_path_file;
         } else {
-            println!(
+            panic!(
                 "{}{}{}{}{}",
                 "Oops".bright_yellow(),
                 " not running wayland ".bright_red(),
