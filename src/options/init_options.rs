@@ -8,6 +8,7 @@ pub fn init_options_2(paperpass_args: Vec<String>) {
     let insert_index = get_index(paperpass_args.to_owned(), "insert");
     let show_index = get_index(paperpass_args.to_owned(), "show");
     let edit_index = get_index(paperpass_args.to_owned(), "edit");
+    let delete_index = get_index(paperpass_args.to_owned(), "delete");
     if paperpass_args.contains(&"insert".to_string()) {
         args_options(Opt::InsertParams(
             paperpass_args[insert_index + 1].to_owned(),
@@ -16,6 +17,10 @@ pub fn init_options_2(paperpass_args: Vec<String>) {
         args_options(Opt::EditParams(paperpass_args[edit_index + 1].to_owned()));
     } else if paperpass_args.contains(&"show".to_string()) {
         args_options(Opt::ShowParams(paperpass_args[show_index + 1].to_owned()));
+    } else if paperpass_args.contains(&"delete".to_string()) {
+        args_options(Opt::DeleteParams(
+            paperpass_args[delete_index + 1].to_owned(),
+        ));
     } else if paperpass_args.contains(&"-c".to_string()) {
         // default clear clipboard timeout is 30sec
         args_options(Opt::Copy(paperpass_args[show_index + 1].to_owned(), 30));

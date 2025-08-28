@@ -55,6 +55,11 @@ pub fn prompt_help() {
     );
     println!(
         "{}{}",
+        "  delete  <YOUR/DATA/STORE>".cyan(),
+        "\tDelete a secret."
+    );
+    println!(
+        "{}{}",
         "  show -s <YOUR/DATA/STORE>".cyan(),
         "\tShow secret"
     );

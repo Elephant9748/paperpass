@@ -5,8 +5,9 @@ use crate::{
     gpg::helper::{GpgHelper, listprivatekeys},
     options::helpstdout::prompt_help,
     utils::{
-        clipboard::clipboard_copy, edit::edit_with_params, insert::insert_with_params,
-        ls::list_dir_with_params, show::show_with_params, totp::totp_create,
+        clipboard::clipboard_copy, delete::delete_with_params, edit::edit_with_params,
+        insert::insert_with_params, ls::list_dir_with_params, show::show_with_params,
+        totp::totp_create,
     },
 };
 
@@ -16,6 +17,7 @@ pub enum Opt {
     InsertParams(String),
     EditParams(String),
     ShowParams(String),
+    DeleteParams(String),
     Copy(String, i32),
     ShowConfig,
     ListRecepients(String),
@@ -34,6 +36,7 @@ pub fn args_options(opt: Opt) {
         Opt::InsertParams(a) => insert_with_params(a.as_str()),
         Opt::EditParams(a) => edit_with_params(a.as_str()),
         Opt::ShowParams(a) => show_with_params(a.as_str()),
+        Opt::DeleteParams(a) => delete_with_params(a.as_str()),
         Opt::Copy(a, b) => clipboard_copy(a.as_str(), b),
         Opt::TotpCreate(a, b) => totp_create(a.as_str(), b),
         Opt::ListDir(a) => list_dir_with_params(a.as_str()),
