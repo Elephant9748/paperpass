@@ -48,6 +48,15 @@ impl Totp {
         let full_path_file = read_full_filename(params, &read_config_from_file.store.path);
         if self.session == "wayland" {
             self.full_path = full_path_file;
+        } else {
+            println!(
+                "{}{}{}{}{}",
+                "Oops".bright_yellow(),
+                " not running wayland ".bright_red(),
+                ENV_CONFIG.bright_yellow(),
+                ": ".bright_yellow(),
+                self.session.bright_green()
+            );
         }
     }
 }
