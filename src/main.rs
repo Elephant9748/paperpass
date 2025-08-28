@@ -28,7 +28,7 @@ fn main() {
             for a in paperpass_args {
                 match a {
                     arg if arg == "init" => args_options(Opt::Init),
-                    arg if arg == "-list" => {
+                    arg if arg == "-lk" => {
                         args_options(Opt::ListRecepients(String::from("some text")))
                     }
                     arg if arg == "-h" => args_options(Opt::Help),

@@ -11,7 +11,7 @@ Options global:
      --time <TIME>              Copy to clipboard with autoclear after amount of sec TIME=NUMBER default is 30 sec
   -h                            Print help
   -v                            Print version
-  -list                         Print list of pgpkey
+  -lk                           Print list of pgpkey
 
 Command:
   init                          Set init config generate toml

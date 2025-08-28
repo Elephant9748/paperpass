@@ -1,3 +1,5 @@
+use colored::Colorize;
+
 use crate::{
     config::{init_config, init_config_with_params},
     gpg::helper::{GpgHelper, listprivatekeys},
@@ -36,8 +38,22 @@ pub fn args_options(opt: Opt) {
         Opt::ListDir(a) => list_dir_with_params(a.as_str()),
         Opt::ListRecepients(_a) => {
             let pk = GpgHelper::new(listprivatekeys().unwrap());
-            println!("{:?}", pk.get_by_name("brandon"));
-            println!("{:?}", pk.get_all());
+            println!(
+                "{}",
+                "Depend on your gpg key available in ~/.gnupg".bright_cyan()
+            );
+            println!("{}", "Available pgp key: ".bright_green());
+            let mut i = 1;
+            for k in pk.get_all().unwrap().iter() {
+                println!(
+                    "\t\t{}{}{} {}",
+                    "[".bright_yellow(),
+                    i.to_string().bright_blue(),
+                    "]".bright_yellow(),
+                    k.bright_cyan()
+                );
+                i += 1;
+            }
         }
         Opt::Help => prompt_help(),
         Opt::Version => {

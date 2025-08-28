@@ -15,6 +15,7 @@ impl GpgHelper {
     pub fn get_all(&self) -> Option<Vec<String>> {
         self.keys.to_owned()
     }
+    #[allow(dead_code)]
     pub fn get_by_name(&self, n: &str) -> Option<String> {
         if let Some(a) = self.keys.clone().unwrap().into_iter().find(|f| f == n) {
             Some(a)
