@@ -9,16 +9,11 @@ name: release
 #   #   branches: [ "main" ]
 on:
   workflow_dispatch:
-    tags:
-      - "[0-9]+.[0-9]+.[0-9]+"
-    # - "[0-9]+.[0-9]+.[0-9]+[a-z]+"
-#   # push:
-#   #   branches: [ "main" ]
-    # inputs:
-    #   tag:
-    #     description: 'paperpass tag'
-    #     required: true
-    #     default: '1.1.2'
+    inputs:
+      tag:
+        description: 'paperpass tag'
+        required: true
+        default: '1.1.2'
 
 permissions:
   contents: write
@@ -32,7 +27,7 @@ jobs:
 
       - name: Get the release version from the tag
         if: env.VERSION == ''
-        run: echo "VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
+        run: echo "VERSION=${{ github.inputs.tag }}" >> $GITHUB_ENV
 
       - name: Show the version
         run: |
