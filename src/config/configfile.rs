@@ -36,21 +36,14 @@ pub fn set_options_config_path() -> Result<&'static str, String> {
         "[".bright_blue(),
         "1".bright_green(),
         "]".bright_blue(),
-        "config"
+        "~/.config/paperpass/"
     );
     println!(
         "   {}{}{} {}",
         "[".bright_blue(),
         "2".bright_green(),
         "]".bright_blue(),
-        "~/.config/paperpass/"
-    );
-    println!(
-        "   {}{}{} {}",
-        "[".bright_blue(),
-        "3".bright_green(),
-        "]".bright_blue(),
-        ".config"
+        "~/paperpass"
     );
     print!(
         "\n{}",
@@ -63,9 +56,8 @@ pub fn set_options_config_path() -> Result<&'static str, String> {
         let mut path = "paperpass.toml";
         if check_valid(Valid::Num(input_path.to_owned())) {
             match input_path.parse::<i32>().unwrap() {
-                1 => path = "",
-                2 => path = "~/.config/paperpass",
-                3 => path = ".config",
+                1 => path = "~/.config/paperpass",
+                2 => path = "~/paperpass",
                 _ => path = "~/.config/paperpass",
             }
         }
@@ -85,8 +77,10 @@ pub fn set_config_path(p: String) -> Result<String, String> {
             Ok(path.into())
         }
     } else if p.is_empty() {
-        let default_path = "config";
-        let path = force_create_dir(default_path.to_string());
+        let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
+        let mut default_path = PathBuf::from(home_dir);
+        default_path.push("/paperpass");
+        let path = force_create_dir(default_path.display().to_string());
         Ok(path.into())
     } else {
         let path = force_create_dir(p);
@@ -106,8 +100,10 @@ pub fn set_store_path(p: String) -> Result<String, String> {
             Ok(path.into())
         }
     } else if p.is_empty() {
-        let default_path = "store";
-        let path = force_create_dir(default_path.to_string());
+        let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
+        let mut default_path = PathBuf::from(home_dir);
+        default_path.push("/store");
+        let path = force_create_dir(default_path.display().to_string());
         Ok(path.into())
     } else {
         let path = force_create_dir(p);

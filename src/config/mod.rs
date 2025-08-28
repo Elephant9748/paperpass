@@ -77,7 +77,7 @@ pub fn init_config() {
     println!("\n{}{}", "::".bright_blue(), " Store data".bright_yellow());
     println!(
         "{}",
-        "   example path: ~/[whereyoustoredata] or just full path [where/you/store/data]"
+        "   example path: ~/[whereyoustoredata] or just full path [/home/user/where/you/store/data]"
             .italic()
             .bright_magenta()
     );
