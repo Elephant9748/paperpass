@@ -25,7 +25,7 @@ fn check_valid(val: Valid) -> bool {
     }
 }
 
-pub fn set_config_path() -> Result<&'static str, String> {
+pub fn set_options_config_path() -> Result<&'static str, String> {
     println!(
         "\n{}{}",
         "::".bright_blue(),
@@ -36,49 +36,77 @@ pub fn set_config_path() -> Result<&'static str, String> {
         "[".bright_blue(),
         "1".bright_green(),
         "]".bright_blue(),
-        "paperpass.toml"
+        "config"
     );
     println!(
         "   {}{}{} {}",
         "[".bright_blue(),
         "2".bright_green(),
         "]".bright_blue(),
-        "~/config/paperpass/paperpass.toml"
+        "~/.config/paperpass/"
     );
     println!(
         "   {}{}{} {}",
         "[".bright_blue(),
         "3".bright_green(),
         "]".bright_blue(),
-        ".config/paperpass/paperpass.toml"
+        ".config"
     );
-    print!("\n{}", "Where to save config file: ".bright_white());
+    print!(
+        "\n{}",
+        "Where to save config file (default value 1): ".bright_white()
+    );
     let input_path = catch_stdin();
-    let mut path = "paperpass.toml";
-    if check_valid(Valid::Num(input_path.to_owned())) {
-        match input_path.parse::<i32>().unwrap() {
-            1 => path = "paperpass.toml",
-            2 => path = "~/config/paperpass/paperpass.toml",
-            3 => path = ".config/paperpass/paperpass.toml",
-            _ => println!("{}", ":: input key not valid [number]."),
+    if input_path.is_empty() {
+        Ok("")
+    } else {
+        let mut path = "paperpass.toml";
+        if check_valid(Valid::Num(input_path.to_owned())) {
+            match input_path.parse::<i32>().unwrap() {
+                1 => path = "",
+                2 => path = "~/.config/paperpass",
+                3 => path = ".config",
+                _ => path = "~/.config/paperpass",
+            }
         }
+        Ok(path)
     }
-    Ok(path)
+}
+
+pub fn set_config_path(p: String) -> Result<String, String> {
+    if p.starts_with("~") {
+        let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
+        let mut full_home_dir = PathBuf::from(home_dir);
+        full_home_dir.push(&p[2..]);
+        if check_valid(Valid::Path(full_home_dir.display().to_string())) {
+            Ok(full_home_dir.display().to_string())
+        } else {
+            let path = force_create_dir(full_home_dir.display().to_string());
+            Ok(path.into())
+        }
+    } else if p.is_empty() {
+        let default_path = "config";
+        let path = force_create_dir(default_path.to_string());
+        Ok(path.into())
+    } else {
+        let path = force_create_dir(p);
+        Ok(path.into())
+    }
 }
 
 pub fn set_store_path(p: String) -> Result<String, String> {
     if p.starts_with("~") {
-        let home_dir = env::var("HOME").expect(":: var $HOME doesnt exists");
+        let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
         let mut full_home_dir = PathBuf::from(home_dir);
         full_home_dir.push(&p[2..]);
         if check_valid(Valid::Path(full_home_dir.display().to_string())) {
+            Ok(full_home_dir.display().to_string())
+        } else {
             let path = force_create_dir(full_home_dir.display().to_string());
             Ok(path.into())
-        } else {
-            Err(":: set_store_path() failed".to_string())
         }
     } else if p.is_empty() {
-        let default_path = "store/";
+        let default_path = "store";
         let path = force_create_dir(default_path.to_string());
         Ok(path.into())
     } else {
@@ -104,7 +132,7 @@ pub fn git_init(init: bool, store: String) -> io::Result<()> {
 
 fn force_create_dir(b: String) -> String {
     if !Path::new(&b).exists() {
-        std::fs::create_dir(b.to_owned()).expect(":: set_store_path failed create store/");
+        std::fs::create_dir_all(b.to_owned()).expect(":: force_create_dir(b) failed");
     }
     b
 }

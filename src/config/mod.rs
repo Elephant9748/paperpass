@@ -2,7 +2,9 @@ pub mod configfile;
 
 use crate::{
     catch_stdin,
-    config::configfile::{git_init, set_config_path, set_git, set_store_path},
+    config::configfile::{
+        git_init, set_config_path, set_git, set_options_config_path, set_store_path,
+    },
     gpg::helper::{GpgHelper, listprivatekeys},
     utils::manage_env::{ENV_CONFIG, set_env},
 };
@@ -48,12 +50,27 @@ pub fn init_config() {
             val
         );
     }
-    print!("\n{}", "which key to use: ".bright_white());
+    print!(
+        "\n{}",
+        "which key to use (default value 1): ".bright_white()
+    );
     let input_key = catch_stdin();
-    let input_config_path = set_config_path().unwrap().to_string();
+    // use default key index
+    let input_key = if input_key.is_empty() {
+        "1".to_string()
+    } else {
+        input_key
+    };
+
+    let input_config_path = set_options_config_path().unwrap().to_string();
 
     // force create dir config if doesnt exists
-    let forcepath = force_create_dir_on_file(&input_config_path.to_owned());
+    let check_home_dir = set_config_path(input_config_path.to_owned()).unwrap();
+    let forcepath = force_create_dir_on_file(check_home_dir.to_owned().as_str());
+    let mut configpath = "paperpass.toml".to_string();
+    if forcepath.is_empty() {
+        configpath = check_home_dir + "/paperpass.toml";
+    };
 
     // where data is store
     println!("\n{}{}", "::".bright_blue(), " Store data".bright_yellow());
@@ -68,7 +85,7 @@ pub fn init_config() {
     let store_path = set_store_path(input).unwrap();
 
     // store include git
-    print!("\n{}", "Use git init default n (y/n)? ".bright_white());
+    print!("\n{}", "Use git init (default n) (y/n)? ".bright_white());
     let input = catch_stdin();
     let store_git = set_git(input);
     // git init in store
@@ -76,7 +93,7 @@ pub fn init_config() {
 
     let config = Configs {
         config: Config {
-            path: input_config_path,
+            path: configpath.to_owned(),
             git: store_git.unwrap(),
         },
         gpg: Gpg {
@@ -89,8 +106,7 @@ pub fn init_config() {
         store: Store { path: store_path },
     };
     let toml = toml::to_string(&config).unwrap();
-    let file =
-        File::create(format!("{}paperpass.toml", forcepath)).expect(":: paperpass.toml not found");
+    let file = File::create(&configpath).expect(":: paperpass.toml not found");
     let mut buf_writer = BufWriter::new(file);
     let _ = buf_writer.write_all(toml.as_bytes());
     let _ = buf_writer.flush();
@@ -102,7 +118,7 @@ pub fn init_config() {
 pub fn init_config_with_params(opt1: &str, opt2: &str, opt3: &str, opt4: &str) {
     let recipient = GpgHelper::new(listprivatekeys().unwrap());
 
-    let opt1 = if opt1.is_empty() { "store/" } else { opt1 };
+    let opt1 = if opt1.is_empty() { "store" } else { opt1 };
     let opt3 = if opt3.is_empty() {
         &recipient.get_all().unwrap()[0].to_string()
     } else {
@@ -110,10 +126,11 @@ pub fn init_config_with_params(opt1: &str, opt2: &str, opt3: &str, opt4: &str) {
     };
 
     // config
-    let forcepath = force_create_dir_on_file(&opt2.to_owned());
+    let config_check_home = set_config_path(opt2.to_owned()).unwrap();
+    let forcepath = force_create_dir_on_file(&config_check_home);
     let mut configpath = "paperpass.toml".to_string();
-    if !forcepath.is_empty() {
-        configpath = forcepath.as_str().to_owned() + "/paperpass.toml";
+    if forcepath.is_empty() {
+        configpath = config_check_home + "/paperpass.toml";
     };
 
     //set env
