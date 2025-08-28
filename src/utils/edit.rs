@@ -20,10 +20,7 @@ pub fn edit_with_params(params: &str) {
     let params_to_saved = valid_store_path(params);
     let filename = read_full_filename(params, &config.store.path);
 
-    let decrypt_file = env::current_dir().unwrap().to_str().unwrap().to_owned()
-        + "/"
-        + path_to_saved.to_owned().as_str()
-        + params_to_saved.to_owned().as_str();
+    let decrypt_file = path_to_saved.to_owned() + "/" + params_to_saved.to_owned().as_str();
 
     let run_bin = bin_in_box().unwrap();
 

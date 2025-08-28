@@ -10,7 +10,7 @@ use crate::utils::binaries::bin_in_box;
 pub fn encrypt_with_params(saved_path: &str, plaintext: &str, uid: &str, file_path: &str) -> bool {
     let run_bin = bin_in_box().unwrap();
     // path output *.asc
-    let path_out = saved_path.to_owned() + file_path;
+    let path_out = saved_path.to_owned() + "/" + file_path;
 
     // force create dir & filename
     let output = create_filename(&path_out.to_owned());
