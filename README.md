@@ -21,6 +21,7 @@ Command:
       -pk <YOUR PGP KEY>        Set which key to used (name of key)
   insert  <YOUR/DATA/STORE>     Insert new secret.
   edit    <YOUR/DATA/STORE>     Edit secret.
+  delete  <YOUR/DATA/STORE>     Delete a secret.
   show -s <YOUR/DATA/STORE>     Show secret
   totp    <YOUR/DATA/STORE>     Display totp every 30
   totp -c <YOUR/DATA/STORE>     Copy totp into clipboard
