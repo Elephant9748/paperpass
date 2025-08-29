@@ -73,6 +73,7 @@ pub fn prompt_help() {
         "  totp -c <YOUR/DATA/STORE>".cyan(),
         "\tCopy totp into clipboard"
     );
+    println!("{}{}", "  ls".cyan(), "\t\t\t\tList of secrets");
     println!(
         "{}{}",
         "  ls      <YOUR/DATA/STORE>".cyan(),
