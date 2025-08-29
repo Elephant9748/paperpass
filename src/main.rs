@@ -10,6 +10,7 @@ use crate::{
         },
         options::{Opt, args_options},
     },
+    utils::check_session_type,
 };
 
 mod config;
@@ -19,6 +20,8 @@ mod options;
 mod utils;
 
 fn main() {
+    // note for none wayland session
+    check_session_type();
     let mut paperpass_args: Vec<String> = std::env::args().collect();
     paperpass_args.remove(0);
 

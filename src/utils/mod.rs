@@ -10,13 +10,17 @@ pub mod show;
 pub mod totp;
 
 use std::{
+    env,
     fs::File,
     io::{BufReader, Read},
 };
 
+use colored::Colorize;
+
 use crate::{
     config::Configs,
     errors::err::{Error, message},
+    utils::manage_env::SESSION,
 };
 
 pub fn read_config_file(filepath: &str) -> Result<Configs, String> {
@@ -39,4 +43,15 @@ pub fn valid_store_path(path: &str) -> String {
         store_path = path.to_owned() + "/";
     }
     store_path
+}
+
+pub fn check_session_type() {
+    let session = env::var(SESSION).expect(message(Error::EnvNotFound).as_str());
+    if session != "wayland" {
+        println!(
+            "{}{}",
+            "Some function doesnt work properly under none ".yellow(),
+            "wayland session.".green()
+        );
+    }
 }
