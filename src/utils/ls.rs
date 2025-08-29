@@ -103,3 +103,16 @@ pub fn list_dir_with_params(params: &str) {
     println!("{}", dirs.name.bright_red());
     dirs.print_in_trees(0, 4);
 }
+
+pub fn list_dir_root() {
+    let mut ls = Ls::new("".to_string());
+    ls.get_store_path();
+    let full_path = ls.store_path.to_owned();
+
+    let mut dirs = Dirs::new(full_path.as_str());
+    ls.get_to_dirs(&mut dirs, full_path.into()).unwrap();
+
+    // println!("{:#?}", dirs);
+    println!("{}", "paperpass".bright_red());
+    dirs.print_in_trees(0, 4);
+}
