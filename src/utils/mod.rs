@@ -49,7 +49,9 @@ pub fn check_session_type() {
     let session = env::var(SESSION).expect(message(Error::EnvNotFound).as_str());
     if session != "wayland" {
         println!(
-            "{}{}",
+            "{}{}{}{}",
+            "Your current session: ".yellow(),
+            session.red(),
             "Some function doesnt work properly under none ".yellow(),
             "wayland session.".green()
         );
