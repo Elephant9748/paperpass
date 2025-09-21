@@ -12,14 +12,14 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: codeberg-small
     steps:
     - uses: actions/checkout@v4
 
-    # - name: install prerequisites
-    #   run: |
-    #     cargo install diceware
-    #     command -v diceware
+    - name: install prerequisites
+      run: |
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh | 1
+        rustc --version
 
     - name: Run Build
       run: cargo b -r

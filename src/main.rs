@@ -28,7 +28,7 @@ fn main() {
     let mut check_option_double = false;
     match paperpass_args.len() {
         1 => {
-            for a in paperpass_args {
+            for a in paperpass_args.to_owned() {
                 match a {
                     arg if arg == "init" => args_options(Opt::Init),
                     arg if arg == "ls" => args_options(Opt::ListDirRoot),
@@ -37,6 +37,7 @@ fn main() {
                         args_options(Opt::ListRecepients(String::from("some text")))
                     }
                     arg if arg == "-h" => args_options(Opt::Help),
+                    arg if arg == "--help" => args_options(Opt::Help),
                     arg if arg == "-v" => args_options(Opt::Version),
                     _ => {
                         check_option_double = true;
@@ -44,18 +45,24 @@ fn main() {
                 }
             }
         }
-        2 => init_options_2(paperpass_args),
-        3 => init_options_3(paperpass_args),
-        4 => init_options_4(paperpass_args),
-        5 => init_options_5(paperpass_args),
-        6 => init_options_6(paperpass_args),
-        8 => init_options_8(paperpass_args),
+        2 => init_options_2(paperpass_args.to_owned()),
+        3 => init_options_3(paperpass_args.to_owned()),
+        4 => init_options_4(paperpass_args.to_owned()),
+        5 => init_options_5(paperpass_args.to_owned()),
+        6 => init_options_6(paperpass_args.to_owned()),
+        8 => init_options_8(paperpass_args.to_owned()),
         _ => check_option_double = true,
     }
 
     if check_option_double {
+        let mut not_menu = String::new();
+        for val in &paperpass_args {
+            not_menu.push_str(val.as_str());
+            not_menu.push(' ');
+        }
         println!(
-            "{}{}",
+            "{}{}{}",
+            not_menu.bright_red(),
             "::".bright_blue(),
             message(Error::OptionsNotFound).bright_yellow()
         );
