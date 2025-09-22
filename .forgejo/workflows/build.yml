@@ -15,7 +15,9 @@ jobs:
     runs-on: codeberg-small
     steps:
     - uses: actions/checkout@v4
-    - uses: dtolnay/rust-toolchain@stable
+    - uses: wackbyte/rust-toolchain@trunk
+      with:
+        toolchain: stable
 
     - name: Run Build
       run: cargo b -r
