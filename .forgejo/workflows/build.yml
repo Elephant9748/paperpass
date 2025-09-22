@@ -22,9 +22,10 @@ jobs:
         rustc --version
         cargo b -r
         cargo t
+        cargo r -r -- --help
 
-    - name: Run Build
-      run: cargo b -r
-
-    - name: Run Tests
-      run: cargo t 
+    # - name: Run Build
+    #   run: cargo b -r
+    #
+    # - name: Run Tests
+    #   run: cargo t 
