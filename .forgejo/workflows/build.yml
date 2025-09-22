@@ -15,11 +15,7 @@ jobs:
     runs-on: codeberg-small
     steps:
     - uses: actions/checkout@v4
-
-    - name: install prerequisites
-      run: |
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -y
-        rustc --version
+    - uses: dtolnay/rust-toolchain@stable
 
     - name: Run Build
       run: cargo b -r
