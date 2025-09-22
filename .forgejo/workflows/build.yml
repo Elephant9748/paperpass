@@ -16,6 +16,8 @@ jobs:
     steps:
     - uses: actions/checkout@v5
     - uses: dtolnay/rust-toolchain@stable
+      with:
+        toolchain: stable
 
     - name: Run Build
       run: cargo b -r
