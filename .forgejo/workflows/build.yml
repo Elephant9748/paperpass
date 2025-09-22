@@ -20,6 +20,8 @@ jobs:
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
         . "$HOME/.cargo/env"
         rustc --version
+        cargo b -r
+        cargo t
 
     - name: Run Build
       run: cargo b -r
