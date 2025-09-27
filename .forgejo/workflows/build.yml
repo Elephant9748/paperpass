@@ -13,17 +13,17 @@ env:
 jobs:
   build:
     runs-on: codeberg-tiny
-    container: ubuntu:latest
+    container: archlinux:latest
 
     steps:
-      # - name: Create resolv.conf
-      #   run: |
-      #     set -ex
-      #     echo 'nameserver 194.242.2.4' >/etc/resolv.conf
-      #     echo 'nameserver 194.242.2.3' >>/etc/resolv.conf
-      #
-      # - name: Install dependencies
-      #   run: pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel cmake ninja curl jq
+      - name: Create resolv.conf
+        run: |
+          set -ex
+          echo 'nameserver 194.242.2.4' >/etc/resolv.conf
+          echo 'nameserver 194.242.2.3' >>/etc/resolv.conf
+
+      - name: Install dependencies
+        run: pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel cmake ninja curl jq nodejs
 
       - name: Checkout code
         uses: https://code.forgejo.org/actions/checkout@v5
@@ -31,7 +31,6 @@ jobs:
       - name: Run Build
         run: |
           uname -a
-          lsb-release -a
           rustc --version
 
       - name: Run Build
