@@ -32,7 +32,9 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Run Build
-        run: cargo b -r
+        run: | 
+          cargo b -r
+          rustc --version
 
       - name: Run Tests
         run: cargo t 
