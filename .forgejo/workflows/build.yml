@@ -19,8 +19,8 @@ jobs:
       - name: Create resolv.conf
         run: |
           set -ex
-          echo 'nameserver 194.242.2.4' >/etc/resolv.conf
-          echo 'nameserver 194.242.2.3' >>/etc/resolv.conf
+          echo 'nameserver 1.1.1.1' >/etc/resolv.conf
+          echo 'nameserver 1.1.0.0' >>/etc/resolv.conf
 
       - name: Install dependencies
         run: pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel cmake ninja curl jq nodejs
