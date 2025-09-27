@@ -13,3 +13,11 @@ totp-rs = { version = "5.7.0", features = ["otpauth", "url"] }
 
 [build-dependencies]
 chrono = "0.4.42"
+
+[target.aarch64-unknown-linux-musl]
+cc = "aarch64-linux-musl-gcc"
+cxx = "aarch64-linux-musl-g++"
+ar = "aarch64-linux-musl-ar"
+linker = "aarch64-linux-musl-gcc"
+
+
