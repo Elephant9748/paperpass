@@ -12,24 +12,29 @@ env:
 
 jobs:
   build:
-    runs-on: codeberg-small
+    runs-on: codeberg-tiny
     container: archlinux:latest
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Create resolv.conf
+        run: |
+          set -ex
+          echo 'nameserver 194.242.2.4' >/etc/resolv.conf
+          echo 'nameserver 194.242.2.3' >>/etc/resolv.conf
 
-    # - name: install prerequisites
-    #   run: |
-    #     cargo install diceware
-    #     command -v diceware
+      - name: Install dependencies
+        run: pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel cmake ninja curl jq
 
-    - name: Run Build
-      run: |
-        uname -a
-        rustc --version
+      - name: Checkout code
+        uses: https://code.forgejo.org/actions/checkout@v5
 
-    - name: Run Build
-      run: cargo b -r
+      - name: Run Build
+        run: |
+          uname -a
+          rustc --version
 
-    - name: Run Tests
-      run: cargo t 
+      - name: Run Build
+        run: cargo b -r
+
+      - name: Run Tests
+        run: cargo t 
