@@ -16,7 +16,7 @@ jobs:
     container: archlinux:latest
 
     steps:
-    - uses: https://code.forgejo.org/actions/checkout@v5
+    - uses: actions/checkout@v5
 
     # - name: install prerequisites
     #   run: |
