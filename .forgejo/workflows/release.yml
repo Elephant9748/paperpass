@@ -51,7 +51,7 @@ jobs:
 
       - name: Install dependencies
         run: | 
-          pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel cmake ninja curl jq nodejs git rust-aarch64-gnu rust-aarch64-musl
+          pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel cmake ninja curl jq nodejs git aarch64-linux-gnu-gcc aarch64-linux-gnu-binutils aarch64-linux-gnu-glibc
 
       - name: Checkout code
         uses: https://code.forgejo.org/actions/checkout@v5
@@ -63,10 +63,8 @@ jobs:
           targets: ${{ matrix.info.target }}
 
       - name: Rust version
-        run: rustc --version
-      
-      - name: Toolchain Active
         run: |
+          rustc --version
           rustup toolchain list
           echo ${{ matrix.info.target }}
 
@@ -78,6 +76,10 @@ jobs:
         run: | 
           ls -la target/
           ls -la target/${{ matrix.info.target }}/release
+
+      - name: Verify Release Binaries
+        run:
+          file target/${{ matrix.info.target }}/release/paperpass
 
 
       # - name: Build release binary
