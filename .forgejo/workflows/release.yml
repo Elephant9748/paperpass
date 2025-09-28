@@ -52,21 +52,7 @@ jobs:
             rust: stable
             target: aarch64-unknown-linux-musl
             name: aarch64-linux-gnu-musl
-      
-    services:
-      docker:
-        image: docker:28.4.0-cli-alpine3.22
-        options: --privileged
-        ports:
-          - 2375:2375
     steps:
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Check Dockerd
-        run: |
-          docker ps -a
 
       - name: Create resolv.conf
         run: |
@@ -93,17 +79,13 @@ jobs:
           rustc --version
           rustup toolchain list
           echo ${{ matrix.info.target }}
-      
-      # - name: Start Dockerd
-      #   shell: bash
-      #   run: |
-      #     /usr/bin/dockerd --containerd=/var/run/docker.sock &
-      #     echo "dockerd &"
-      #
-      # - name: Docker Container Checkout
-      #   shell: bash
-      #   run:
-      #     docker ps -a
+
+      - name: Dockerd Check
+        run: |
+          # systemctl start docker.socket
+          sudo /usr/bin/dockerd -H unix:///var/run/docker.sock -H tcp://0.0.0.0:2376 &
+          sleep 5
+          echo "In Background Now"
 
       - name: Use Cross
         if: matrix.info.container == 'archlinux:latest' && matrix.info.target != ''
