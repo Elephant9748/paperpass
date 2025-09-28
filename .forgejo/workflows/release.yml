@@ -53,12 +53,12 @@ jobs:
             target: aarch64-unknown-linux-musl
             name: aarch64-linux-gnu-musl
       
-    # services:
-    #   docker:
-    #     image: docker:28.4.0-cli-alpine3.22
-    #     options: --privileged
-    #     ports:
-    #       - 2375:2375
+    services:
+      docker:
+        image: docker:28.4.0-cli-alpine3.22
+        options: --privileged
+        ports:
+          - 2375:2375
     steps:
       - name: Create resolv.conf
         run: |
