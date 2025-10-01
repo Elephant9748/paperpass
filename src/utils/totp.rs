@@ -68,7 +68,8 @@ pub fn totp_create(params: &str, timeout: i32) {
 
     // get otp url from plaintext
     let plainvec: Vec<&str> = plaintext.split("\n").collect();
-    let totprs = TOTP::from_url(plainvec[2]).expect("Url is empty not allow in TOTP::from_url()");
+    let totprs = TOTP::from_url(plainvec[2])
+        .expect(format!("{}", "Totp::try_from error ->".bright_red()).as_str());
 
     //timestamp
     let timestamp: DateTime<Utc> = Utc::now();
