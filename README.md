@@ -8,7 +8,7 @@ Usage: paperpass [COMMAND] [OPTIONS] [ARGS]
 
 Options global:
   -c <YOUR/DATA/STORE>          Copy to clipboard
-     --time <TIME>              Copy to clipboard with autoclear after amount of sec TIME=NUMBER default is 30 sec
+     -time <TIME>              Copy to clipboard with autoclear after amount of sec TIME=NUMBER default is 30 sec
   -h                            Print help
   -v                            Print version
   -lk                           Print list of pgpkey

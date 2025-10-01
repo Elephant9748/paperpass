@@ -15,7 +15,7 @@ pub fn prompt_help() {
     );
     println!(
         "{}{}",
-        "     --time <TIME>".cyan(),
+        "     -time <TIME>".cyan(),
         "\t\tCopy to clipboard with autoclear after amount of sec TIME=NUMBER default is 30 sec"
     );
     println!("{}{}", "  -h".cyan(), "\t\t\t\tPrint help");
