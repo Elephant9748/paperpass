@@ -2,33 +2,9 @@ name: release
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches: [ "main" ]
-  # pull_request:
-  #   branches: [ "main" ]
 
 jobs:
   build-release:
-    runs-on: codeberg-tiny
-    container: 
-      image: ${{ matrix.info.container }}
-    name: ${{ matrix.info.name }}
-    env:
-      # For some builds, we use cross to test on 32-bit and big-endian
-      # systems.
-      CARGO: cargo
-      # When CARGO is set to CROSS, this is set to `--target matrix.target`.
-      TARGET_FLAGS:
-      # When CARGO is set to CROSS, TARGET_DIR includes matrix.target.
-      TARGET_DIR: ./target
-      # Bump this as appropriate. We pin to a version to make sure CI
-      # continues to work as cross releases in the past have broken things
-      # in subtle ways.
-      CROSS_VERSION: v0.2.5
-      # Emit backtraces on panics.
-      RUST_BACKTRACE: 1
-      # Build static releases with PCRE2.
-      # PCRE2_SYS_STATIC: 1
     strategy:
       matrix:
         info:
@@ -36,17 +12,17 @@ jobs:
             container: archlinux:latest
             rust: stable
             target: x86_64-unknown-linux-gnu
-            name: x86_64-gnu
+            name: x86_64-linux
           - build: x86_64-musl
             container: archlinux:latest
             rust: stable
             target: x86_64-unknown-linux-musl
             name: x86_64-linux-musl
-          - build: aarch64-gnu
-            container: archlinux:latest
-            rust: stable
-            target: aarch64-unknown-linux-gnu
-            name: aarch64-linux-gnu
+
+    runs-on: codeberg-tiny
+    container: 
+      image: ${{ matrix.info.container }}
+    name: ${{ matrix.info.name }}
 
     steps:
       - name: Create resolv.conf
@@ -58,7 +34,7 @@ jobs:
       - name: Install dependencies
         shell: bash
         run: | 
-          pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel cmake ninja curl jq nodejs git
+          pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel cmake ninja curl jq nodejs git lsb-release
 
       - name: Checkout code
         uses: https://code.forgejo.org/actions/checkout@v5
@@ -75,111 +51,37 @@ jobs:
           rustup toolchain list
           echo ${{ matrix.info.target }}
 
-      # - name: Docker setup
-      #   run: |
-      #     id
-      #     docker run --privileged --name dockerd -d \
-      #       --network some-network --network-alias docker \
-      #       -e DOCKER_TLS_CERTDIR=/certs \
-      #       -v some-docker-certs-ca:/certs/ca \
-      #       -v some-docker-certs-client:/certs/client \
-      #       docker:dind
-      #
-      # - name: Dockerd Check
-      #   run: |
-      #     # systemctl start docker.socket
-      #     # sudo /usr/bin/dockerd -H unix:///var/run/docker.sock -H tcp://0.0.0.0:2376 &
-      #     sleep 5
-      #     echo "In Background Now"
-      #     docker info
-      #     docker ps -a
-
-      - name: Use Cross
-        if: matrix.info.container == 'archlinux:latest' && matrix.info.target != ''
-        shell: bash
+      - name: Build release
         run: |
-          # In the past, new releases of 'cross' have broken CI. So for now, we
-          # pin it. We also use their pre-compiled binary releases because cross
-          # has over 100 dependencies and takes a bit to compile.
-          dir="$RUNNER_TEMP/cross-download"
-          mkdir "$dir"
-          echo "$dir" >> $FORGEJO_PATH
-          cd "$dir"
-          curl -LO "https://github.com/cross-rs/cross/releases/download/$CROSS_VERSION/cross-x86_64-unknown-linux-musl.tar.gz"
-          ls -la 
-          tar -xzf cross-x86_64-unknown-linux-musl.tar.gz
-          echo "CARGO=cross" >> $FORGEJO_ENV
-
-      - name: Set target variables
-        shell: bash
-        run: |
-          echo "TARGET_FLAGS=--target ${{ matrix.target }}" >> $FORGEJO_ENV
-          echo "TARGET_DIR=./target/${{ matrix.target }}" >> $FORGEJO_ENV
-
-      - name: Show command used for Cargo
-        shell: bash
-        run: |
-          echo "cargo command is: ${{ env.CARGO }}"
-          echo "target flag is: ${{ env.TARGET_FLAGS }}"
-          echo "target dir is: ${{ env.TARGET_DIR }}"
-
-      - name: Build release binary
-        shell: bash
-        run: |
+          rustup target add ${{ matrix.info.target }}
           pwd
-          ${{ env.CARGO }} build --verbose --release ${{ env.TARGET_FLAGS }}
-          if [ "${{ matrix.os }}" = "windows-latest" ]; then
-          bin="target/${{ matrix.target }}/release/paperpass.exe"
-          else
-          bin="target/${{ matrix.target }}/release/paperpass"
-          fi
-          echo "BIN=$bin" >> $FORGEJO_ENV
+          cargo build --release --target ${{ matrix.info.target }}
 
-      - name: Strip release binary (cross)
-        if: env.CARGO == 'cross'
+      - name: Codeberg Cli
         shell: bash
         run: |
-          docker run --rm -v \
-          "$PWD/target:/target:Z" \
-          "ghcr.io/cross-rs/${{ matrix.target }}:main" \
-          "${{ matrix.strip }}" \
-          "/$BIN"
+          cargo install codeberg-cli
+          berg -h
+          echo "Berg install success."
 
-      - name: Determine archive name
+      - name: Packaging tar
         shell: bash
         run: |
-          version="${{ needs.create-release.outputs.version }}"
-          echo "ARCHIVE=paperpass-$version-${{ matrix.name }}" >> $FORGEJO_ENV
+          cp target/${{ matrix.info.target }}/release/paperpass .
+          file paperpass
+          echo ${{ env.FORGEJO_REPOSITORY }}
+          echo ${{ env.FORGEJO_REPOSITORY_OWNER }}
+          ls -la
+          echo "create tar"
+          echo "----------"
+          tar -zcvf paperpass-${{ matrix.info.target }}.tar.gz paperpass
+          ls -la
 
-      - name: Creating directory for archive
+      - name: Create release
         shell: bash
         run: |
-          mkdir -p "$ARCHIVE"
-          # mkdir -p "$ARCHIVE"/{qrcode,stegano}
-          cp "$BIN" "$ARCHIVE"/
-
-      - name: Build archive (Unix)
-        shell: bash
-        if: matrix.os != 'windows-latest'
-        run: |
-          tar czf "$ARCHIVE.tar.gz" "$ARCHIVE"
-          shasum -a 256 "$ARCHIVE.tar.gz" > "$ARCHIVE.tar.gz.sha256"
-          echo "ASSET=$ARCHIVE.tar.gz" >> $FORGEJO_ENV
-          echo "ASSET_SUM=$ARCHIVE.tar.gz.sha256" >> $FORGEJO_ENV
-
-      - name: Create Draft release
-        uses: https://code.forgejo.org/actions/forgejo-release@v2.7.2
-        with:
-          direction: upload
-          hide-archive-link: true
-          repo: rigel254/paperpass
-          release-dir: ${{ env.TARGET_DIR }}
-
-      - name: Upload release archive
-        env:
-          FORGEJO_TOKEN: ${{ secrets.FORGEJO_TOKEN }}
-        shell: bash
-        run: |
-          version="${{ needs.create-release.outputs.version }}"
-          gh release upload "$version" ${{ env.ASSET }} ${{ env.ASSET_SUM }}
+          berg --non-interactive auth login --token ${{ env.FORGEJO_TOKEN }}
+          berg --output-mode json repo list | jq '.'
+          berg release create --name "paperpass" -d "desc"
+          # berg release create --repo ${{ env.FORGEJO_REPOSITORY }} --attachments paperpass-${{ matrix.info.target }}.tar.gz
 
