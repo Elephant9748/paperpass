@@ -63,7 +63,7 @@ jobs:
       - name: Install dependencies
         shell: bash
         run: | 
-          pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel cmake ninja curl jq nodejs git
+          pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel cmake ninja curl jq nodejs git docker
 
       - name: Checkout code
         uses: https://code.forgejo.org/actions/checkout@v5
@@ -81,14 +81,22 @@ jobs:
           echo ${{ matrix.info.target }}
 
       - name: Docker setup
-        uses: https://code.forgejo.org/docker/setup-buildx-action@v1
+        run: |
+          docker run --privileged --name some-docker -d \
+            --network some-network --network-alias docker \
+            -e DOCKER_TLS_CERTDIR=/certs \
+            -v some-docker-certs-ca:/certs/ca \
+            -v some-docker-certs-client:/certs/client \
+            docker:dind
 
       - name: Dockerd Check
         run: |
           # systemctl start docker.socket
-          sudo /usr/bin/dockerd -H unix:///var/run/docker.sock -H tcp://0.0.0.0:2376 &
+          # sudo /usr/bin/dockerd -H unix:///var/run/docker.sock -H tcp://0.0.0.0:2376 &
           sleep 5
           echo "In Background Now"
+          docker info
+          docker ps -a
 
       - name: Use Cross
         if: matrix.info.container == 'archlinux:latest' && matrix.info.target != ''
