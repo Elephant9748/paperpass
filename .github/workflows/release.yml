@@ -92,6 +92,13 @@ jobs:
             name: aarch64-linux-gnu
             strip: aarch64-linux-gnu-strip
             qemu: qemu-aarch64
+          - build: stable-aarch64-musl
+            os: ubuntu-latest
+            rust: stable
+            target: aarch64-unknown-linux-musl
+            name: aarch64-linux-gnu-musl
+            strip: aarch64-linux-gnu-strip
+            qemu: qemu-aarch64
 
     steps:
       - name: Checkout repository
