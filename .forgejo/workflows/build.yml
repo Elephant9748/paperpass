@@ -1,68 +1,40 @@
 name: build
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:
+  # push:
+  #   branches: [ "main" ]
+  # pull_request:
+  #   branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
 
 jobs:
   build:
     runs-on: codeberg-tiny
+    container: archlinux:latest
 
     steps:
-    - name: Checkout code
-      uses: https://code.forgejo.org/actions/checkout@v5
+      - name: Create resolv.conf
+        run: |
+          set -ex
+          echo 'nameserver 1.1.1.1' >/etc/resolv.conf
+          echo 'nameserver 1.1.0.0' >>/etc/resolv.conf
 
-    - name: Set up aarch64 environment
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y qemu qemu-user-static
+      - name: Install dependencies
+        run: pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel cmake ninja curl jq nodejs git
 
-    - name: Run aarch64 container
-      run: |
-        docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-        docker run --rm -t --platform linux/arm64 ubuntu:20.04 bash -c "uname -m"
+      - name: Checkout code
+        uses: https://code.forgejo.org/actions/checkout@v5
 
-# name: build
-#
-# on:
-#   workflow_dispatch:
-#   # push:
-#   #   branches: [ "main" ]
-#   # pull_request:
-#   #   branches: [ "main" ]
-#
-# env:
-#   CARGO_TERM_COLOR: always
-#
-# jobs:
-#   build:
-#     runs-on: codeberg-tiny
-#     container: archlinux:latest
-#
-#     steps:
-#       - name: Create resolv.conf
-#         run: |
-#           set -ex
-#           echo 'nameserver 1.1.1.1' >/etc/resolv.conf
-#           echo 'nameserver 1.1.0.0' >>/etc/resolv.conf
-#
-#       - name: Install dependencies
-#         run: pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel cmake ninja curl jq nodejs git
-#
-#       - name: Checkout code
-#         uses: https://code.forgejo.org/actions/checkout@v5
-#
-#       - name: Setup rust toolchain
-#         uses: https://code.forgejo.org/theoparis/rust-toolchain@stable
-#       - name: Rust version
-#         run: rustc --version
-#
-#       # - name: Run Build
-#       #   run: cargo b -r
-#
-#       - name: Run Tests
-#         run: cargo t 
+      - name: Setup rust toolchain
+        uses: https://code.forgejo.org/theoparis/rust-toolchain@stable
+      - name: Rust version
+        run: rustc --version
+
+      # - name: Run Build
+      #   run: cargo b -r
+
+      - name: Run Tests
+        run: cargo t 
