@@ -10,7 +10,8 @@ on:
 jobs:
   build-release:
     runs-on: codeberg-tiny
-    container: ${{ matrix.info.container }}
+    container: 
+      image: ${{ matrix.info.container }}
     name: ${{ matrix.info.name }}
     env:
       # For some builds, we use cross to test on 32-bit and big-endian
@@ -31,26 +32,21 @@ jobs:
     strategy:
       matrix:
         info:
-          - build: linux
+          - build: x86_64_gnu
             container: archlinux:latest
             rust: stable
             target: x86_64-unknown-linux-gnu
-            name: x86_64-linux-gnu
-          - build: linux-musl
+            name: x86_64-gnu
+          - build: x86_64-musl
             container: archlinux:latest
             rust: stable
             target: x86_64-unknown-linux-musl
             name: x86_64-linux-musl
-          - build: linux-aarch64
+          - build: aarch64-gnu
             container: archlinux:latest
             rust: stable
             target: aarch64-unknown-linux-gnu
             name: aarch64-linux-gnu
-          - build: linux-musl-aarch64
-            container: archlinux:latest
-            rust: stable
-            target: aarch64-unknown-linux-musl
-            name: aarch64-linux-gnu-musl
 
     steps:
       - name: Create resolv.conf
@@ -62,7 +58,7 @@ jobs:
       - name: Install dependencies
         shell: bash
         run: | 
-          pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel cmake ninja curl jq nodejs git podman
+          pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel cmake ninja curl jq nodejs git
 
       - name: Checkout code
         uses: https://code.forgejo.org/actions/checkout@v5
