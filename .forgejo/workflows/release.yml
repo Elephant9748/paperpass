@@ -52,8 +52,8 @@ jobs:
             rust: stable
             target: aarch64-unknown-linux-musl
             name: aarch64-linux-gnu-musl
-    steps:
 
+    steps:
       - name: Create resolv.conf
         run: |
           set -ex
@@ -63,7 +63,7 @@ jobs:
       - name: Install dependencies
         shell: bash
         run: | 
-          pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel cmake ninja curl jq nodejs git docker
+          pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel cmake ninja curl jq nodejs git
 
       - name: Checkout code
         uses: https://code.forgejo.org/actions/checkout@v5
@@ -79,6 +79,9 @@ jobs:
           rustc --version
           rustup toolchain list
           echo ${{ matrix.info.target }}
+
+      - name: Docker setup
+        uses: https://code.forgejo.org/docker/setup-buildx-action@v1
 
       - name: Dockerd Check
         run: |
