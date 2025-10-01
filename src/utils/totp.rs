@@ -66,9 +66,9 @@ pub fn totp_create(params: &str, timeout: i32) {
     totp.get_full_path_of_file(params);
     let plaintext = totp.decrypt_file();
 
-    // get otp url from plaintext
+    // get otp url uncheck from plaintext
     let plainvec: Vec<&str> = plaintext.split("\n").collect();
-    let totprs = TOTP::from_url(plainvec[2])
+    let totprs = TOTP::from_url_unchecked(plainvec[2])
         .expect(format!("{}", "Totp::try_from error ->".bright_red()).as_str());
 
     //timestamp
