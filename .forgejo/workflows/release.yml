@@ -2,8 +2,60 @@ name: release
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: '1.1.5'
+        required: true
+        type: string
 
 jobs:
+  create-release:
+    name: create-release-draft
+    runs-on: codeberg-tiny
+    container: archlinux:latest
+    steps:
+      - name: Create resolv.conf
+        run: |
+          set -ex
+          echo 'nameserver 1.1.1.1' >/etc/resolv.conf
+          echo 'nameserver 1.1.0.0' >>/etc/resolv.conf
+
+      - name: Install dependencies
+        shell: bash
+        run: | 
+          pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel cmake ninja curl jq nodejs git lsb-release
+
+      - name: Checkout code
+        uses: https://code.forgejo.org/actions/checkout@v5
+
+      - name: Setup rust toolchain
+        uses: https://code.forgejo.org/theoparis/rust-toolchain@master
+        with:
+          toolchain: stable
+
+      - name: Forgejo Cli
+        shell: bash
+        run: |
+          cargo install forgejo-cli
+          fj version
+          echo "------------------------"
+          echo "Forgejo install success."
+      
+      - name: Codeberg Output
+        run: |
+          set -x 
+          echo ${{ env.FORGEJO_REF }}
+          echo "BIN=paperpass-${{ inputs.version }}" >> $FORGEJO_OUTPUT
+
+      - name: Create Codeberg Release
+        shell: bash
+        run: |
+          fj auth add-key ${{ env.FORGEJO_REPOSITORY_OWNER }} ${{ env.FORGEJO_TOKEN }}
+          fj release create --draft --prerelease  --tag ${{ inputs.version }} paperpass-${{ inputs.version }}
+    outputs:
+      result: ${{ steps.create-release.outputs.BIN }}
+      
+
   build-release:
     strategy:
       matrix:
@@ -23,6 +75,7 @@ jobs:
     container: 
       image: ${{ matrix.info.container }}
     name: ${{ matrix.info.name }}
+    needs: [create-release]
 
     steps:
       - name: Create resolv.conf
@@ -57,12 +110,13 @@ jobs:
           pwd
           cargo build --release --target ${{ matrix.info.target }}
 
-      - name: Codeberg Cli
+      - name: Forgejo Cli
         shell: bash
         run: |
-          cargo install codeberg-cli
-          berg -h
-          echo "Berg install success."
+          cargo install forgejo-cli
+          fj version
+          echo "------------------------"
+          echo "Forgejo install success."
 
       - name: Packaging tar
         shell: bash
@@ -71,17 +125,22 @@ jobs:
           file paperpass
           echo ${{ env.FORGEJO_REPOSITORY }}
           echo ${{ env.FORGEJO_REPOSITORY_OWNER }}
+          echo ${{ env.FORGEJO_REF_NAME }}
           ls -la
           echo "create tar"
           echo "----------"
           tar -zcvf paperpass-${{ matrix.info.target }}.tar.gz paperpass
           ls -la
 
-      - name: Create release
+      - name: Upload release
         shell: bash
         run: |
-          berg --non-interactive auth login --token ${{ env.FORGEJO_TOKEN }}
-          berg --output-mode json repo list | jq '.'
-          berg release create --name "paperpass" -d "desc"
-          # berg release create --repo ${{ env.FORGEJO_REPOSITORY }} --attachments paperpass-${{ matrix.info.target }}.tar.gz
+          ls -la
+          fj auth add-key ${{ env.FORGEJO_REPOSITORY_OWNER }} ${{ env.FORGEJO_TOKEN }}
+          fj auth list
+          fj repo view
+          echo "${{ needs.create-release.outputs.result }}"
+          # fj release create --draft --prerelease --attach=paperpass-${{ matrix.info.target }}.tar.gz --tag 1.1.5 paperpass-${{ matrix.info.target }}
+          fj release asset create ${{ needs.create-release.outputs.result }} paperpass-${{ matrix.info.target }}.tar.gz paperpass-${{ matrix.info.target }}
+
 
