@@ -130,11 +130,13 @@ jobs:
           echo "create tar"
           echo "----------"
           tar -zcvf ${{ env.BIN_NAME }}-${{ matrix.info.name }}.tar.gz ${{ env.BIN_NAME }}
+          sha256sum ${{ env.BIN_NAME }}-${{ matrix.info.name }}.tar.gz >> ${{ env.BIN_NAME }}-${{ matrix.info.name }}.tar.gz.sha256
 
       - name: Upload release
         shell: bash
         run: |
           fj auth add-key ${{ env.FORGEJO_REPOSITORY_OWNER }} ${{ env.FORGEJO_TOKEN }}
-          fj release asset create ${{ needs.create-release.outputs.result }} ${{ env.BIN_NAME }}-${{ matrix.info.name }}.tar.gz ${{ env.BIN_NAME }}-${{ matrix.info.name }}
+          fj release asset create ${{ needs.create-release.outputs.result }} ${{ env.BIN_NAME }}-${{ matrix.info.name }}.tar.gz ${{ env.BIN_NAME }}-${{ matrix.info.name }}.tar.gz
+          fj release asset create ${{ needs.create-release.outputs.result }} ${{ env.BIN_NAME }}-${{ matrix.info.name }}.tar.gz.sha256 ${{ env.BIN_NAME }}-${{ matrix.info.name }}.tar.gz.sha256
 
 
