@@ -125,7 +125,6 @@ jobs:
       - name: Packaging tar
         shell: bash
         run: |
-          set -x
           cp target/${{ matrix.info.target }}/release/${{ env.BIN_NAME }} .
           file ${{ env.BIN_NAME }}
           echo "create tar"
