@@ -40,11 +40,10 @@ jobs:
           fj version
           echo "------------------------"
           echo "Forgejo install success."
-      
-      - name: Codeberg Output
+
+      - id: getoutput
         run: |
           set -x 
-          echo ${{ env.FORGEJO_REF }}
           echo "BIN=paperpass-${{ inputs.version }}" >> $FORGEJO_OUTPUT
 
       - name: Create Codeberg Release
@@ -53,8 +52,7 @@ jobs:
           fj auth add-key ${{ env.FORGEJO_REPOSITORY_OWNER }} ${{ env.FORGEJO_TOKEN }}
           fj release create --draft --prerelease  --tag ${{ inputs.version }} paperpass-${{ inputs.version }}
     outputs:
-      result: ${{ steps.create-release.outputs.BIN }}
-      
+      result: ${{ steps.getoutput.outputs.BIN }}
 
   build-release:
     strategy:
@@ -139,7 +137,6 @@ jobs:
           fj auth add-key ${{ env.FORGEJO_REPOSITORY_OWNER }} ${{ env.FORGEJO_TOKEN }}
           fj auth list
           fj repo view
-          echo "${{ needs.create-release.outputs.result }}"
           # fj release create --draft --prerelease --attach=paperpass-${{ matrix.info.target }}.tar.gz --tag 1.1.5 paperpass-${{ matrix.info.target }}
           fj release asset create ${{ needs.create-release.outputs.result }} paperpass-${{ matrix.info.target }}.tar.gz paperpass-${{ matrix.info.target }}
 
