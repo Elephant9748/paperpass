@@ -2,11 +2,6 @@ name: release
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: '1.1.5'
-        required: true
-        type: string
 
 jobs:
   create-release:
@@ -41,16 +36,22 @@ jobs:
           echo "------------------------"
           echo "Forgejo install success."
 
-      - id: getoutput
+      - name: Get latest tag
+        shell: bash
+        run: |
+          echo "TAG=$(git describe --abbrev=0)" >> $FORGEJO_ENV
+
+      - name: Create output 
+        id: getoutput
         run: |
           set -x 
-          echo "BIN=paperpass-${{ inputs.version }}" >> $FORGEJO_OUTPUT
+          echo "BIN=paperpass-${{ env.TAG }}" >> $FORGEJO_OUTPUT
 
       - name: Create Codeberg Release
         shell: bash
         run: |
           fj auth add-key ${{ env.FORGEJO_REPOSITORY_OWNER }} ${{ env.FORGEJO_TOKEN }}
-          fj release create --draft --prerelease  --tag ${{ inputs.version }} paperpass-${{ inputs.version }}
+          fj release create --draft --prerelease  --tag ${{ env.TAG }} paperpass-${{ env.TAG }}
     outputs:
       result: ${{ steps.getoutput.outputs.BIN }}
 
