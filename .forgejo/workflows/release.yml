@@ -136,6 +136,8 @@ jobs:
         run: |
           ls -la
           fj auth add-key ${{ env.FORGEJO_REPOSITORY_OWNER }} ${{ env.FORGEJO_TOKEN }}
+          fj auth list
+          fj repo view
           fj release asset create ${{ needs.create-release.outputs.result }} ${{ env.BIN_NAME }}-${{ matrix.info.target }}.tar.gz ${{ env.BIN_NAME }}-${{ matrix.info.target }}
 
 
