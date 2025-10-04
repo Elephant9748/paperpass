@@ -130,6 +130,7 @@ jobs:
           echo "create tar"
           echo "----------"
           tar -zcvf ${{ env.BIN_NAME }}-${{ matrix.info.name }}.tar.gz ${{ env.BIN_NAME }}
+          ls -la 
 
       - name: Upload release
         shell: bash
