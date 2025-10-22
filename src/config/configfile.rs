@@ -76,11 +76,20 @@ pub fn set_config_path(p: String) -> Result<String, String> {
             let path = force_create_dir(full_home_dir.display().to_string());
             Ok(path.into())
         }
+    } else if p.starts_with("$HOME") {
+        let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
+        let mut full_home_dir = PathBuf::from(home_dir);
+        full_home_dir.push(&p[6..]);
+        if check_valid(Valid::Path(full_home_dir.display().to_string())) {
+            Ok(full_home_dir.display().to_string())
+        } else {
+            let path = force_create_dir(full_home_dir.display().to_string());
+            Ok(path.into())
+        }
     } else if p.is_empty() {
         let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
         let mut default_path = PathBuf::from(home_dir);
         default_path.push("paperpass");
-        println!("{}", default_path.display().to_string());
         let path = force_create_dir(default_path.display().to_string());
         Ok(path.into())
     } else {
@@ -100,11 +109,20 @@ pub fn set_store_path(p: String) -> Result<String, String> {
             let path = force_create_dir(full_home_dir.display().to_string());
             Ok(path.into())
         }
+    } else if p.starts_with("$HOME") {
+        let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
+        let mut full_home_dir = PathBuf::from(home_dir);
+        full_home_dir.push(&p[6..]);
+        if check_valid(Valid::Path(full_home_dir.display().to_string())) {
+            Ok(full_home_dir.display().to_string())
+        } else {
+            let path = force_create_dir(full_home_dir.display().to_string());
+            Ok(path.into())
+        }
     } else if p.is_empty() {
         let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
         let mut default_path = PathBuf::from(home_dir);
         default_path.push("store");
-        println!("{}", default_path.display().to_string());
         let path = force_create_dir(default_path.display().to_string());
         Ok(path.into())
     } else {
