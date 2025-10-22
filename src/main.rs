@@ -32,13 +32,12 @@ fn main() {
                 match a {
                     arg if arg == "init" => args_options(Opt::Init),
                     arg if arg == "ls" => args_options(Opt::ListDirRoot),
-                    arg if arg == "-config" => args_options(Opt::ShowConfig),
+                    arg if arg == "-config" || arg == "--config" => args_options(Opt::ShowConfig),
                     arg if arg == "-lk" => {
                         args_options(Opt::ListRecepients(String::from("some text")))
                     }
-                    arg if arg == "-h" => args_options(Opt::Help),
-                    arg if arg == "--help" => args_options(Opt::Help),
-                    arg if arg == "-v" => args_options(Opt::Version),
+                    arg if arg == "-h" || arg == "--help" => args_options(Opt::Help),
+                    arg if arg == "-v" || arg == "--version" => args_options(Opt::Version),
                     _ => {
                         check_option_double = true;
                     }

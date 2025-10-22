@@ -18,10 +18,10 @@ pub fn prompt_help() {
         "     -time <TIME>".cyan(),
         "\t\tCopy to clipboard with autoclear after amount of sec TIME=NUMBER default is 30 sec"
     );
-    println!("{}{}", "  -h".cyan(), "\t\t\t\tPrint help");
-    println!("{}{}", "  -v".cyan(), "\t\t\t\tPrint version");
+    println!("{}{}", "  -h --help".cyan(), "\t\t\tPrint help");
+    println!("{}{}", "  -v --version".cyan(), "\t\t\tPrint version");
     println!("{}{}", "  -lk".cyan(), "\t\t\t\tPrint list of pgpkey");
-    println!("{}{}", "  -config".cyan(), "\t\t\tShow config json");
+    println!("{}{}", "  -config --config".cyan(), "\t\tShow config json");
     println!("{}", "\nCommand: ".green());
     println!(
         "{}{}",
