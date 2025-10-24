@@ -68,10 +68,11 @@ pub fn args_options(opt: Opt) {
         }
         Opt::Help => prompt_help(),
         Opt::Version => {
+            let name = env!("CARGO_PKG_NAME");
             let version = env!("CARGO_PKG_VERSION");
             let build_date = env!("DATE");
             let git_head_hash = env!("GIT_HASH");
-            println!("paperpass {} ({} {})", version, git_head_hash, build_date);
+            println!("{} {} ({} {})", name, version, git_head_hash, build_date);
         }
     }
 }

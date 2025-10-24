@@ -1,6 +1,7 @@
 use colored::Colorize;
 
 pub fn prompt_help() {
+    let name = env!("CARGO_PKG_NAME");
     let version = env!("CARGO_PKG_VERSION");
     let build_date = env!("DATE");
     let git_head_hash = env!("GIT_HASH");
@@ -80,8 +81,9 @@ pub fn prompt_help() {
         "\tList of secrets"
     );
     println!(
-        "\n{}paperpass {} ({} {})\n",
+        "\n{}{} {} ({} {})\n",
         "Version: ".green(),
+        name,
         version,
         git_head_hash,
         build_date
