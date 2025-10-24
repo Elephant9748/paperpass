@@ -9,7 +9,8 @@ use crate::{
 };
 
 pub fn show_with_params(params: &str) {
-    let configpath = env::var(ENV_CONFIG).expect(message(Error::EnvNotFound).as_str());
+    let configpath =
+        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
     let config = read_config_file(&configpath).unwrap();
     let filename = read_full_filename(params, &config.store.path);
 
@@ -29,10 +30,8 @@ pub fn read_full_filename(path: &str, dir_saved: &str) -> String {
     // get the name, example: "your/path/file"
     let get_name = path.split("/");
     let mut get_name_vec: Vec<&str> = get_name.collect();
-    if let Some(last) = get_name_vec.last() {
-        if last.is_empty() {
-            get_name_vec.pop();
-        }
+    if get_name_vec.last().unwrap().is_empty() {
+        get_name_vec.pop();
     }
 
     // put them back into full of file path
@@ -43,7 +42,7 @@ pub fn read_full_filename(path: &str, dir_saved: &str) -> String {
             filename.push_str(get_name_vec[i]);
         } else {
             filename.push_str(get_name_vec[i]);
-            filename.push_str("/");
+            filename.push('/');
         }
         i += 1;
     }

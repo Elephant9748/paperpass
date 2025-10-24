@@ -8,7 +8,7 @@ use crate::{
             init_options_2, init_options_3, init_options_4, init_options_5, init_options_6,
             init_options_8,
         },
-        options::{Opt, args_options},
+        opt::{Opt, args_options},
     },
     utils::check_session_type,
 };
@@ -28,7 +28,7 @@ fn main() {
     let mut check_option_double = false;
     match paperpass_args.len() {
         1 => {
-            for a in paperpass_args.to_owned() {
+            for a in paperpass_args.iter() {
                 match a {
                     arg if arg == "init" => args_options(Opt::Init),
                     arg if arg == "ls" => args_options(Opt::ListDirRoot),
@@ -71,11 +71,11 @@ fn main() {
 pub fn catch_stdin() -> String {
     let mut input = String::new();
 
-    let _ = io::stdout().flush().unwrap();
+    io::stdout().flush().unwrap();
 
     io::stdin()
         .read_line(&mut input)
-        .expect(message(Error::CatchStdin).as_str());
+        .unwrap_or_else(|_| panic!("{}", message(Error::CatchStdin)));
 
     input.trim().to_string()
 }

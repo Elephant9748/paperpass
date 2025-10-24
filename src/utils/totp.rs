@@ -33,7 +33,7 @@ struct Totp {
 impl Totp {
     fn new(session: String) -> Self {
         Self {
-            session: session,
+            session,
             full_path: "".into(),
         }
     }
@@ -43,7 +43,8 @@ impl Totp {
     }
 
     fn get_full_path_of_file(&mut self, params: &str) {
-        let env_config_path = env::var(ENV_CONFIG).expect(message(Error::EnvNotFound).as_str());
+        let env_config_path =
+            env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
         let read_config_from_file = read_config_file(&env_config_path).unwrap();
         let full_path_file = read_full_filename(params, &read_config_from_file.store.path);
         if self.session == "wayland" {
@@ -69,7 +70,7 @@ pub fn totp_create(params: &str, timeout: i32) {
     // get otp url uncheck from plaintext
     let plainvec: Vec<&str> = plaintext.split("\n").collect();
     let totprs = TOTP::from_url_unchecked(plainvec[2])
-        .expect(format!("{}", "Totp::try_from error ->".bright_red()).as_str());
+        .unwrap_or_else(|_| panic!("{}", "Totp::try_from error ->".bright_red()));
 
     //timestamp
     let timestamp: DateTime<Utc> = Utc::now();

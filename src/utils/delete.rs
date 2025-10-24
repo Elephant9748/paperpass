@@ -8,7 +8,8 @@ use crate::{
 };
 
 pub fn delete_with_params(params: &str) {
-    let configpath = env::var(ENV_CONFIG).expect(message(Error::EnvNotFound).as_str());
+    let configpath =
+        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
     let config = read_config_file(&configpath).unwrap();
     let path_to_saved = valid_store_path(config.store.path.as_str());
     let params_to_saved = valid_store_path(params);
@@ -20,17 +21,17 @@ pub fn delete_with_params(params: &str) {
 
     if Path::new(&full_path_of_file).is_file() {
         std::fs::remove_file(full_path_of_file).expect("delete_with_params() remove file failed");
-        println!("{}{}", "::".bright_blue(), " Delete Ok.")
+        println!("{}{}", "::".bright_blue(), " Delete Ok.".white())
     } else if Path::new(&full_path_of_dir).is_dir() {
         std::fs::remove_dir_all(full_path_of_dir).expect("delete_with_params() remove dir failed");
-        println!("{}{}", "::".bright_blue(), " Delete Ok.")
+        println!("{}{}", "::".bright_blue(), " Delete Ok.".white())
     } else {
         println!(
             "{}{}\"{}\"{}",
             "::".bright_blue(),
             " Delete Failed. ".bright_red(),
             full_path_of_file.bright_yellow(),
-            " Is not a file"
+            " Is not a file".white()
         );
     }
 }

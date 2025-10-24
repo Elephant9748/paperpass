@@ -14,7 +14,8 @@ use crate::{
 };
 
 pub fn edit_with_params(params: &str) {
-    let configpath = env::var(ENV_CONFIG).expect(message(Error::EnvNotFound).as_str());
+    let configpath =
+        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
     let config = read_config_file(&configpath).unwrap();
     let path_to_saved = valid_store_path(config.store.path.as_str());
     let params_to_saved = valid_store_path(params);
@@ -28,26 +29,25 @@ pub fn edit_with_params(params: &str) {
 
     // decrypt to file
     let _ = Command::new(run_bin[0])
-        .args(&["-o", decrypt_file.as_str(), "-d", filename.as_str()])
+        .args(["-o", decrypt_file.as_str(), "-d", filename.as_str()])
         .stdout(Stdio::piped())
         .status()
-        .expect(
-            format!(
+        .unwrap_or_else(|_| {
+            panic!(
                 "{}",
                 ":: edit_with_params() decrypt gpg exited".bright_yellow()
             )
-            .as_str(),
-        );
+        });
 
     // open editor
     let _ = Command::new(editor)
         .arg(&decrypt_file)
         .status()
-        .expect(format!("{}", ":: edit_with_params() editor exited".bright_yellow()).as_str());
+        .unwrap_or_else(|_| panic!("{}", ":: edit_with_params() editor exited".bright_yellow()));
 
     // encrypt to file
     let _ = Command::new(run_bin[0])
-        .args(&[
+        .args([
             "-a",
             "-o",
             format!("{}.asc", decrypt_file).as_str(),
@@ -60,19 +60,18 @@ pub fn edit_with_params(params: &str) {
             &decrypt_file,
         ])
         .status()
-        .expect(
-            format!(
+        .unwrap_or_else(|_| {
+            panic!(
                 "{}",
                 ":: edit_with_params() encrypt gpg exited".bright_yellow()
             )
-            .as_str(),
-        );
+        });
 
     // shreding file
     let shreding = Command::new("shred")
-        .args(&["-uzn", "100", &decrypt_file])
+        .args(["-uzn", "100", &decrypt_file])
         .stdout(Stdio::piped())
         .output()
-        .expect(format!("{}", ":: edit_with_params() shred exited".bright_yellow()).as_str());
+        .unwrap_or_else(|_| panic!("{}", ":: edit_with_params() shred exited".bright_yellow()));
     println!("{}", String::from_utf8_lossy(&shreding.stdout));
 }

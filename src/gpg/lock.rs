@@ -17,13 +17,15 @@ pub fn encrypt_with_params(saved_path: &str, plaintext: &str, uid: &str, file_pa
     println!("{} Saved to {}", "::".bright_blue(), output);
 
     // encrypt data
-    let echo = Command::new(run_bin[2])
-        .args(&[plaintext])
+    let mut echo = Command::new(run_bin[2])
+        .args([plaintext])
         .stdout(Stdio::piped())
         .spawn()
-        .expect(format!("{}", ":: failed to run echo".bright_yellow()).as_str());
+        .unwrap_or_else(|_| panic!("{}", ":: failed to run echo".bright_yellow()));
+    echo.wait()
+        .expect("--> Failed to wait echo encrypt_with_params()");
     let gpg = Command::new(run_bin[0])
-        .args(&[
+        .args([
             "-a",
             "-o",
             output.as_str(),
@@ -37,19 +39,17 @@ pub fn encrypt_with_params(saved_path: &str, plaintext: &str, uid: &str, file_pa
         .stdin(Stdio::from(echo.stdout.unwrap()))
         .stdout(Stdio::piped())
         .output()
-        .expect(format!("{}", ":: failed to run gpg".bright_yellow()).as_str());
+        .unwrap_or_else(|_| panic!("{}", ":: failed to run gpg".bright_yellow()));
 
-    if gpg.stderr.is_empty() { true } else { false }
+    gpg.stderr.is_empty()
 }
 
 fn create_filename(path: &str) -> String {
     // get the name, example: "your/path/file"
     let get_name = path.split("/");
     let mut get_name_vec: Vec<&str> = get_name.collect();
-    if let Some(last) = get_name_vec.last() {
-        if last.is_empty() {
-            get_name_vec.pop();
-        }
+    if get_name_vec.last().unwrap().is_empty() {
+        get_name_vec.pop();
     }
 
     // put them back into full of file path
@@ -60,7 +60,7 @@ fn create_filename(path: &str) -> String {
             filename.push_str(get_name_vec[i]);
         } else {
             filename.push_str(get_name_vec[i]);
-            filename.push_str("/");
+            filename.push('/');
         }
         i += 1;
     }
@@ -78,7 +78,7 @@ fn force_create_dir(path_in_vec: Vec<&str>) {
             create_dir.push_str(path_in_vec[x]);
         } else {
             create_dir.push_str(path_in_vec[x]);
-            create_dir.push_str("/");
+            create_dir.push('/');
         }
 
         x += 1;

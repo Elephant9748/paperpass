@@ -9,10 +9,10 @@ pub fn git_init_run(store: &str) -> Result<bool, String> {
     let run_bin = bin_in_box().unwrap();
 
     let git = Command::new(run_bin[3])
-        .args(&["init", store])
+        .args(["init", store])
         .stdout(Stdio::piped())
         .output()
-        .expect(format!("{}", ":: Git Init failed".bright_yellow()).as_str());
+        .unwrap_or_else(|_| panic!("{}", ":: Git Init failed".bright_yellow()));
 
     if git.stderr.is_empty() {
         Ok(true)
@@ -29,13 +29,13 @@ pub fn git_commit(store_path: &str, params: String) {
     let current_utc: DateTime<Utc> = Utc::now();
 
     let _ = Command::new(run_bin[3])
-        .args(&["-C", store_path, "add", "."])
+        .args(["-C", store_path, "add", "."])
         .stdout(Stdio::piped())
         .output()
-        .expect(format!("{}", ":: git_commit() git add . failed".bright_yellow()).as_str());
+        .unwrap_or_else(|_| panic!("{}", ":: git_commit() git add . failed".bright_yellow()));
 
     let git_commit = Command::new(run_bin[3])
-        .args(&[
+        .args([
             "-C",
             store_path,
             "commit",
@@ -44,11 +44,11 @@ pub fn git_commit(store_path: &str, params: String) {
         ])
         .stdout(Stdio::piped())
         .output()
-        .expect(format!("{}", ":: git_commit() git commit -m failed".bright_yellow()).as_str());
+        .unwrap_or_else(|_| panic!("{}", ":: git_commit() git commit -m failed".bright_yellow()));
 
     println!(
         "{}",
         String::from_utf8_lossy(&git_commit.stdout).into_owned()
     );
-    println!("{}{}", "::".bright_blue(), " Git commit true.");
+    println!("{}{}", "::".bright_blue(), " Git commit true.".white());
 }

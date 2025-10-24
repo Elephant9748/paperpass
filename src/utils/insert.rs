@@ -10,7 +10,8 @@ use crate::{
 };
 
 pub fn insert_with_params(params: &str) {
-    let configpath = env::var(ENV_CONFIG).expect(message(Error::EnvNotFound).as_str());
+    let configpath =
+        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
     let config = read_config_file(&configpath).unwrap();
     let path_to_saved = valid_store_path(config.store.path.as_str());
     let params_to_saved = valid_store_path(params);
@@ -28,15 +29,15 @@ pub fn insert_with_params(params: &str) {
     );
 
     if go_encrypt {
-        println!("{}{}", "::".bright_blue(), " Encrypt Ok.")
+        println!("{}{}", "::".bright_blue(), " Encrypt Ok.".white())
     } else {
-        println!("{}{}", "::".bright_blue(), " Encrypt Failed.")
+        println!("{}{}", "::".bright_blue(), " Encrypt Failed.".white())
     }
 
     //git commit
     if config.config.git {
         git_commit(config.store.path.as_str(), params_to_saved);
     } else {
-        println!("{}{}", "::".bright_blue(), " Git commit false.");
+        println!("{}{}", "::".bright_blue(), " Git commit false.".white());
     }
 }

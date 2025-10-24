@@ -1,6 +1,6 @@
 use crate::{
     errors::err::{Error, message},
-    options::options::{Opt, args_options},
+    options::opt::{Opt, args_options},
 };
 use colored::Colorize;
 
@@ -228,7 +228,7 @@ pub fn init_options_8(paperpass_args: Vec<String>) {
 fn get_index(a: Vec<String>, b: &str) -> usize {
     let mut index = 0;
     if a.contains(&b.to_string()) {
-        index = a.iter().position(|mark| mark == &b).unwrap();
+        index = a.iter().position(|mark| mark == b).unwrap();
     }
     index
 }

@@ -40,11 +40,13 @@ impl<'a> Clip<'a> {
 
     pub fn copy(&self, plaintext: &'a str) {
         Command::new(self.bin)
-            .args(&[plaintext])
+            .args([plaintext])
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .spawn()
-            .expect(format!("{} {}", message(Error::CopyClipFailed), self.bin).as_str());
+            .unwrap_or_else(|_| panic!("{} {}", message(Error::CopyClipFailed), self.bin))
+            .try_wait()
+            .expect("--> Failed to wait copy() Clip Struct");
     }
 
     pub fn clear_clipboard(&mut self, timeout: i32) {
@@ -53,13 +55,15 @@ impl<'a> Clip<'a> {
             let clip_bin = clip.to_owned();
             let thread_clip = thread::spawn(move || {
                 Command::new("sh")
-                    .args(&[
+                    .args([
                         "-c",
                         format!("sleep {} && {} -c", clear_clipboard_duration, clip_bin).as_str(),
                     ])
                     .stdout(Stdio::piped())
                     .spawn()
-                    .expect("Thread failed No bash found.");
+                    .expect("Thread failed No bash found.")
+                    .try_wait()
+                    .expect("--> Failed to wait clear_clipboard()");
             });
 
             if thread_clip.join().is_ok() {
@@ -85,7 +89,8 @@ pub fn clipboard_copy(params: &str, timeout: i32) {
     }
 
     // get full path
-    let configpath = env::var(ENV_CONFIG).expect(message(Error::EnvNotFound).as_str());
+    let configpath =
+        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
     let config = read_config_file(&configpath).unwrap();
     let filename = read_full_filename(params, &config.store.path);
     let plaintext = decrypt_with_params(&filename);

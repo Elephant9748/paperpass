@@ -42,7 +42,7 @@ pub fn init_config() {
     let recipient = GpgHelper::new(listprivatekeys().unwrap());
     println!("\n{} {}", "::".bright_blue(), "Recipient".yellow());
     for (mut key, val) in recipient.get_all().unwrap().into_iter().enumerate() {
-        *&mut key += 1;
+        key += 1;
         println!(
             "   {}{}{} {}",
             "[".bright_purple(),
@@ -90,7 +90,7 @@ pub fn init_config() {
     let input = catch_stdin();
     let store_git = set_git(input);
     // git init in store
-    let _ = git_init(store_git.to_owned().unwrap(), store_path.to_owned()).unwrap();
+    git_init(store_git.to_owned().unwrap(), store_path.to_owned()).unwrap();
 
     let config = Configs {
         config: Config {
@@ -98,11 +98,7 @@ pub fn init_config() {
             git: store_git.unwrap(),
         },
         gpg: Gpg {
-            key: format!(
-                "{}",
-                &recipient.get_all().unwrap()[input_key.parse::<usize>().unwrap() - 1]
-            )
-            .to_string(),
+            key: recipient.get_all().unwrap()[input_key.parse::<usize>().unwrap() - 1].to_string(),
         },
         store: Store { path: store_path },
     };
@@ -143,7 +139,7 @@ pub fn init_config_with_params(opt1: &str, opt2: &str, opt3: &str, opt4: &str) {
     //store with git
     let store_git = set_git(opt4.to_string());
     // git init in store
-    let _ = git_init(store_git.to_owned().unwrap(), store_path.to_owned()).unwrap();
+    git_init(store_git.to_owned().unwrap(), store_path.to_owned()).unwrap();
 
     let config = Configs {
         config: Config {
