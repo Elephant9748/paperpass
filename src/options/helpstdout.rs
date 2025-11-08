@@ -1,3 +1,4 @@
+use crate::options::banner::prompt_banner;
 use colored::Colorize;
 
 pub fn prompt_help() {
@@ -5,6 +6,7 @@ pub fn prompt_help() {
     let version = env!("CARGO_PKG_VERSION");
     let build_date = env!("DATE");
     let git_head_hash = env!("GIT_HASH");
+    prompt_banner();
     print!("{}", "\nUsage: ".green());
     println!("{}", "paperpass [COMMAND] [OPTIONS] [ARGS]".cyan());
     println!("{}", "       paperpass [GLOBAL OPTIONS] [ARGS]".cyan());

@@ -7,6 +7,7 @@ use crate::{
         git_init, set_config_path, set_git, set_options_config_path, set_store_path,
     },
     gpg::helper::{GpgHelper, listprivatekeys},
+    options::banner::prompt_banner,
     utils::manage_env::{ENV_CONFIG, set_env},
 };
 use colored::Colorize;
@@ -40,6 +41,7 @@ pub struct Store {
 
 pub fn init_config() {
     let recipient = GpgHelper::new(listprivatekeys().unwrap());
+    prompt_banner();
     println!("\n{} {}", "::".bright_blue(), "Recipient".yellow());
     for (mut key, val) in recipient.get_all().unwrap().into_iter().enumerate() {
         key += 1;
