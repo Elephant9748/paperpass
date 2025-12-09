@@ -39,14 +39,14 @@ impl<'a> Clip<'a> {
     }
 
     pub fn copy(&self, plaintext: &'a str) {
-        Command::new(self.bin)
+        let mut copy = Command::new(self.bin)
             .args([plaintext])
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .spawn()
-            .unwrap_or_else(|_| panic!("{} {}", message(Error::CopyClipFailed), self.bin))
-            .try_wait()
-            .expect("--> Failed to wait copy() Clip Struct");
+            .unwrap_or_else(|_| panic!("{} {}", message(Error::CopyClipFailed), self.bin));
+
+        let _ = copy.wait().expect("--> Failed to wait on copy");
     }
 
     pub fn clear_clipboard(&mut self, timeout: i32) {
@@ -54,16 +54,18 @@ impl<'a> Clip<'a> {
             let clear_clipboard_duration = timeout;
             let clip_bin = clip.to_owned();
             let thread_clip = thread::spawn(move || {
-                Command::new("sh")
+                let mut clear_clipboard = Command::new("sh")
                     .args([
                         "-c",
                         format!("sleep {} && {} -c", clear_clipboard_duration, clip_bin).as_str(),
                     ])
                     .stdout(Stdio::piped())
                     .spawn()
-                    .expect("Thread failed No bash found.")
+                    .expect("Thread failed No bash found.");
+
+                let _ = clear_clipboard
                     .try_wait()
-                    .expect("--> Failed to wait clear_clipboard()");
+                    .expect("--> failed to wait clear_clipboard");
             });
 
             if thread_clip.join().is_ok() {
