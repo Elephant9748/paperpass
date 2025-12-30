@@ -12,21 +12,22 @@ Options global:
   -h --help                     Print help
   -v --version                  Print version
   -lk                           Print list of pgpkey
-  -config                       Show config json
+  -config --config              Show config json
 
 Command:
-  init                          Set init config generate toml
-      -c ~/<YOUR CONFIG PATH>   Where config saved, must have ~/ or the full path
-      -s ~/<YOUR DATA STORE>    Where data store must have ~/ or the full path
-      -pk <YOUR PGP KEY>        Set which key to used (name of key)
-  insert  <YOUR/DATA/STORE>     Insert new secret.
-  edit    <YOUR/DATA/STORE>     Edit secret.
-  delete  <YOUR/DATA/STORE>     Delete a secret.
-  show -s <YOUR/DATA/STORE>     Show secret
-  totp    <YOUR/DATA/STORE>     Display totp every 30
-  totp -c <YOUR/DATA/STORE>     Copy totp into clipboard
-  ls                            List of secrets
-  ls      <YOUR/DATA/STORE>     List of secrets
+  init                                  Set init config generate toml
+      -c        ~/<YOUR CONFIG PATH>    Where config saved, must have ~/ or the full path
+      -s        ~/<YOUR DATA STORE>     Where data store must have ~/ or the full path
+      -pk       <YOUR GPG KEY>          Set which key to used (name of key)
+  insert        <YOUR/DATA/STORE>       Insert new secret.
+  edit          <YOUR/DATA/STORE>       Edit secret.
+  delete        <YOUR/DATA/STORE>       Delete a secret.
+  show -s       <YOUR/DATA/STORE>       Show secret
+  totp          <YOUR/DATA/STORE>       Display totp every 30
+  totp -c       <YOUR/DATA/STORE>       Copy totp into clipboard
+  ls                                    List of secrets
+  ls            <YOUR/DATA/STORE>       List of secrets
+  migrate       <YOUR GPG KEY NAME>     Migrate boxpaperpass to new key
 ```
 
 ### format password with otpauth

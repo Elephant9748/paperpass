@@ -42,58 +42,63 @@ pub fn prompt_help() {
     println!(
         "{}{}",
         "  init".cyan(),
-        "\t\t\t\tSet init config generate toml".white()
+        "\t\t\t\t\tSet init config generate toml".white()
     );
     println!(
         "{}{}",
-        "      -c ~/<YOUR CONFIG PATH>".cyan(),
+        "      -c\t~/<YOUR CONFIG PATH>".cyan(),
         "\tWhere config saved, must have ~/ or the full path".white()
     );
     println!(
         "{}{}",
-        "      -s ~/<YOUR DATA STORE>".cyan(),
+        "      -s\t~/<YOUR DATA STORE>".cyan(),
         "\tWhere data store must have ~/ or the full path".white()
     );
     println!(
         "{}{}",
-        "      -pk <YOUR PGP KEY>".cyan(),
-        "\tSet which key to used (name of key)".white()
+        "      -pk\t<YOUR GPG KEY>".cyan(),
+        "\t\tSet which key to used (name of key)".white()
     );
     println!(
         "{}{}",
-        "  insert  <YOUR/DATA/STORE>".cyan(),
+        "  insert\t<YOUR/DATA/STORE>".cyan(),
         "\tInsert new secret.".white()
     );
     println!(
         "{}{}",
-        "  edit    <YOUR/DATA/STORE>".cyan(),
+        "  edit\t\t<YOUR/DATA/STORE>".cyan(),
         "\tEdit secret.".white()
     );
     println!(
         "{}{}",
-        "  delete  <YOUR/DATA/STORE>".cyan(),
+        "  delete\t<YOUR/DATA/STORE>".cyan(),
         "\tDelete a secret.".white()
     );
     println!(
         "{}{}",
-        "  show -s <YOUR/DATA/STORE>".cyan(),
+        "  show -s\t<YOUR/DATA/STORE>".cyan(),
         "\tShow secret".white()
     );
     println!(
         "{}{}",
-        "  totp    <YOUR/DATA/STORE>".cyan(),
+        "  totp\t\t<YOUR/DATA/STORE>".cyan(),
         "\tDisplay totp every 30".white()
     );
     println!(
         "{}{}",
-        "  totp -c <YOUR/DATA/STORE>".cyan(),
+        "  totp -c\t<YOUR/DATA/STORE>".cyan(),
         "\tCopy totp into clipboard".white()
     );
-    println!("{}{}", "  ls".cyan(), "\t\t\t\tList of secrets".white());
+    println!("{}{}", "  ls".cyan(), "\t\t\t\t\tList of secrets".white());
     println!(
         "{}{}",
-        "  ls      <YOUR/DATA/STORE>".cyan(),
+        "  ls\t\t<YOUR/DATA/STORE>".cyan(),
         "\tList of secrets".white()
+    );
+    println!(
+        "{}{}",
+        "  migrate\t<YOUR GPG KEY NAME>".cyan(),
+        "\tMigrate boxpaperpass to new key".white()
     );
     println!(
         "\n{}{} {} ({} {})\n",
