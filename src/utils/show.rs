@@ -26,6 +26,26 @@ pub fn show_with_params(params: &str) {
     }
 }
 
+pub fn show_with_params_noprint(params: &str) -> String {
+    let configpath =
+        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
+    let config = read_config_file(&configpath).unwrap();
+    let filename = read_full_filename(params, &config.store.path);
+
+    let mut decrypt = String::new();
+    decrypt.push_str("");
+    if Path::new(&filename).exists() {
+        decrypt = decrypt_with_params(&filename);
+    } else {
+        panic!(
+            "{}{}",
+            "File doesnt exists: ".bright_red(),
+            filename.italic()
+        );
+    }
+    decrypt
+}
+
 pub fn read_full_filename(path: &str, dir_saved: &str) -> String {
     // get the name, example: "your/path/file"
     let get_name = path.split("/");

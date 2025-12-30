@@ -131,6 +131,7 @@ pub fn init_config_with_params(opt1: &str, opt2: &str, opt3: &str, opt4: &str) {
     if forcepath.is_empty() {
         configpath = config_check_home + "/paperpass.toml";
     };
+    eprintln!("{}", configpath);
 
     //set env
     set_env(configpath.as_str());

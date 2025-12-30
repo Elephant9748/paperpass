@@ -8,29 +8,24 @@ use crate::{
     utils::{manage_env::ENV_CONFIG, read_config_file},
 };
 
-struct Ls {
-    store_path: String,
+#[derive(Debug, Clone)]
+#[allow(dead_code)]
+pub struct Ls {
+    pub store_path: String,
 }
 
 impl Ls {
-    fn new(store_path: String) -> Self {
-        Self {
-            store_path: if store_path.is_empty() {
-                "".to_string()
-            } else {
-                store_path
-            },
-        }
+    pub fn new(store_path: String) -> Self {
+        Self { store_path }
     }
-    fn get_store_path(&mut self) {
+    pub fn get_store_path(&mut self) {
         let env_config_path =
             env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
         let read_config_from_file = read_config_file(&env_config_path).unwrap();
         self.store_path = read_config_from_file.store.path;
     }
-
     #[allow(clippy::only_used_in_recursion)]
-    fn get_to_dirs(&self, dir: &mut Dirs, path: PathBuf) -> io::Result<()> {
+    pub fn get_to_dirs(&self, dir: &mut Dirs, path: PathBuf) -> io::Result<()> {
         if path.is_dir() {
             let paths = fs::read_dir(&path)?;
             for path_result in paths {
@@ -52,15 +47,15 @@ impl Ls {
 
 #[derive(Debug)]
 #[allow(dead_code)]
-struct Dirs {
-    name: String,
-    file: Vec<String>,
-    subdir: HashMap<String, Dirs>,
+pub struct Dirs {
+    pub name: String,
+    pub file: Vec<String>,
+    pub subdir: HashMap<String, Dirs>,
 }
 
 #[allow(dead_code)]
 impl Dirs {
-    fn new(name: &str) -> Self {
+    pub fn new(name: &str) -> Self {
         Dirs {
             name: name.to_string(),
             file: Vec::new(),
@@ -68,10 +63,10 @@ impl Dirs {
         }
     }
 
-    fn add_file(&mut self, file: &str) {
+    pub fn add_file(&mut self, file: &str) {
         self.file.push(file.to_string());
     }
-    fn print_in_trees(&mut self, indent: usize, dept: usize) {
+    pub fn print_in_trees(&mut self, indent: usize, dept: usize) {
         for f in &self.file {
             println!(
                 "{}{}{}",
@@ -91,6 +86,27 @@ impl Dirs {
             );
             value.print_in_trees(indent + dept, dept);
         }
+    }
+    pub fn flattern_dirs(&mut self, subdir_name: &str) -> Vec<String> {
+        let mut d = Vec::new();
+        for v in &self.file {
+            if subdir_name.is_empty() {
+                d.push(v.to_owned());
+            } else {
+                d.push(format!("{}/{}", subdir_name, v));
+            }
+        }
+        for (key, value) in &mut self.subdir {
+            #[allow(unused)]
+            let mut new_subdir_name = String::from("");
+            if subdir_name.is_empty() {
+                new_subdir_name = key.to_owned();
+            } else {
+                new_subdir_name = format!("{}/{}", subdir_name, key);
+            };
+            d.extend(value.flattern_dirs(new_subdir_name.as_str()));
+        }
+        d
     }
 }
 

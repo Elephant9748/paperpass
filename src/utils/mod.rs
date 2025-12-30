@@ -6,6 +6,7 @@ pub mod git;
 pub mod insert;
 pub mod ls;
 pub mod manage_env;
+pub mod migrate;
 pub mod show;
 pub mod totp;
 

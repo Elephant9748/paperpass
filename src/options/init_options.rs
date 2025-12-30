@@ -40,6 +40,8 @@ pub fn init_options_2(paperpass_args: Vec<String>) {
         ));
     } else if paperpass_args.contains(&"ls".to_string()) {
         args_options(Opt::ListDir(paperpass_args[show_index + 1].to_owned()));
+    } else if paperpass_args.contains(&"migrate".to_string()) {
+        args_options(Opt::Migrate(paperpass_args[show_index + 1].to_owned()));
     } else {
         println!(
             "{}{}",

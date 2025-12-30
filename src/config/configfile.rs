@@ -83,7 +83,7 @@ pub fn set_config_path(p: String) -> Result<String, String> {
     } else if p.is_empty() {
         let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
         let mut default_path = PathBuf::from(home_dir);
-        default_path.push("paperpass");
+        default_path.push(".config/paperpass");
         let path = force_create_dir(default_path.display().to_string());
         Ok(path)
     } else {
@@ -116,7 +116,7 @@ pub fn set_store_path(p: String) -> Result<String, String> {
     } else if p.is_empty() {
         let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
         let mut default_path = PathBuf::from(home_dir);
-        default_path.push("store");
+        default_path.push("paperpass_store");
         let path = force_create_dir(default_path.display().to_string());
         Ok(path)
     } else {

@@ -10,6 +10,7 @@ use crate::{
         edit::edit_with_params,
         insert::insert_with_params,
         ls::{list_dir_root, list_dir_with_params},
+        migrate::send_to_another_box,
         show::show_with_params,
         totp::totp_create,
     },
@@ -28,6 +29,7 @@ pub enum Opt {
     TotpCreate(String, i32),
     ListDir(String),
     ListDirRoot,
+    Migrate(String),
     Help,
     Version,
 }
@@ -66,6 +68,7 @@ pub fn args_options(opt: Opt) {
                 i += 1;
             }
         }
+        Opt::Migrate(params) => send_to_another_box(params),
         Opt::Help => prompt_help(),
         Opt::Version => {
             let name = env!("CARGO_PKG_NAME");
