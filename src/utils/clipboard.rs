@@ -99,11 +99,11 @@ pub fn clipboard_copy(params: &str, timeout: i32) {
 
     // copy only the first line
     let plaintext_vec: Vec<&str> = plaintext.split("\n").collect();
-    if plaintext_vec.is_empty() {
-        eprintln!(
+    if plaintext_vec.is_empty() || plaintext.is_empty() {
+        panic!(
             "{} {}",
             "::".bright_blue(),
-            " oops clipboard empty!".bright_red()
+            " oops nothing to copy maybe missing file!".bright_red()
         )
     }
     clipboard.copy(plaintext_vec[0]);
