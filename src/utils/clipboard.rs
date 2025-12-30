@@ -69,7 +69,7 @@ impl<'a> Clip<'a> {
             });
 
             if thread_clip.join().is_ok() {
-                print!(
+                println!(
                     "{}{}{}",
                     "::".bright_blue(),
                     " Clipboard clear after".bright_yellow(),
@@ -99,6 +99,13 @@ pub fn clipboard_copy(params: &str, timeout: i32) {
 
     // copy only the first line
     let plaintext_vec: Vec<&str> = plaintext.split("\n").collect();
+    if plaintext_vec.is_empty() {
+        eprintln!(
+            "{} {}",
+            "::".bright_blue(),
+            " oops clipboard empty!".bright_red()
+        )
+    }
     clipboard.copy(plaintext_vec[0]);
 
     // clear clipboard specific time duration, default timeout is 30 in fn init_options_4
