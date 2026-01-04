@@ -26,24 +26,39 @@ pub fn show_with_params(params: &str) {
     }
 }
 
-pub fn show_with_params_noprint(params: &str) -> String {
-    let configpath =
-        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
-    let config = read_config_file(&configpath).unwrap();
-    let filename = read_full_filename(params, &config.store.path);
-
+// 0 -> full_path
+// 1 -> path ls
+pub fn show_with_params_noprint(params: &str, full: i16) -> String {
     let mut decrypt = String::new();
     decrypt.push_str("");
-    if Path::new(&filename).exists() {
-        decrypt = decrypt_with_params(&filename);
-    } else {
-        panic!(
-            "{}{}",
-            "File doesnt exists: ".bright_red(),
-            filename.italic()
-        );
+    match full {
+        1 => {
+            let configpath =
+                env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
+            let config = read_config_file(&configpath).unwrap();
+            let filename = read_full_filename(params, &config.store.path);
+
+            if Path::new(&filename).exists() {
+                decrypt = decrypt_with_params(&filename);
+            } else {
+                panic!(
+                    "{}{}",
+                    "File doesnt exists: ".bright_red(),
+                    filename.italic()
+                );
+            }
+            decrypt
+        }
+        0 => {
+            if Path::new(&params).exists() {
+                decrypt = decrypt_with_params(params);
+            } else {
+                panic!("{}{}", "File doesnt exists: ".bright_red(), params.italic());
+            }
+            decrypt
+        }
+        _ => "".to_string(),
     }
-    decrypt
 }
 
 pub fn read_full_filename(path: &str, dir_saved: &str) -> String {

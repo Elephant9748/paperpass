@@ -109,7 +109,7 @@ impl Migrate {
             }
 
             let d_replace = d.replace(".asc", "");
-            let open = show_with_params_noprint(&d_replace);
+            let open = show_with_params_noprint(&d_replace, 1);
             self.h.insert(d_replace.to_owned(), open);
 
             let _ = execute!(
