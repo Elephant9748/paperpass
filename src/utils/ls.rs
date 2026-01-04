@@ -1,4 +1,4 @@
-use std::{collections::HashMap, env, fs, io, path::PathBuf};
+use std::{collections::BTreeMap, env, fs, io, path::PathBuf};
 
 use colored::Colorize;
 use crossterm::style::Stylize;
@@ -50,7 +50,7 @@ impl Ls {
 pub struct Dirs {
     pub name: String,
     pub file: Vec<String>,
-    pub subdir: HashMap<String, Dirs>,
+    pub subdir: BTreeMap<String, Dirs>,
 }
 
 #[allow(dead_code)]
@@ -59,7 +59,7 @@ impl Dirs {
         Dirs {
             name: name.to_string(),
             file: Vec::new(),
-            subdir: HashMap::new(),
+            subdir: BTreeMap::new(),
         }
     }
 
