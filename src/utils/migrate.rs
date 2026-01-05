@@ -176,6 +176,12 @@ impl Migrate {
                 self.open.insert(d.to_owned(), open);
             }
 
+            let prog = if i == (total - 1) {
+                100_f32
+            } else {
+                ((i as f32 / *total as f32) * (100) as f32).floor()
+            };
+
             let _ = execute!(
                 stdout,
                 MoveTo(0, h - 3),
@@ -184,11 +190,12 @@ impl Migrate {
                 Print(":: located encrypted files\n"),
                 SetForegroundColor(Color::Yellow),
                 Print(format!(
-                    "-> [{}{}{}] {} total\n",
+                    "-> [{}{}{}] {}% {} file\n",
                     "-".repeat(i / (total / (total / 2))),
                     ">",
                     "".repeat((total / (total / (total / 2))) - (i / (total / (total / 2)))),
-                    i
+                    prog,
+                    i + 1
                 )),
             );
             // line
@@ -271,6 +278,13 @@ impl Migrate {
             } else {
                 k1 = k.to_string();
             }
+
+            let prog = if i == (total - 1) {
+                100_f32
+            } else {
+                ((i as f32 / total as f32) * (100) as f32).floor()
+            };
+
             insert_for_migration(k1.as_str(), v, &migrate_path, params);
             let _ = execute!(
                 stdout,
@@ -280,11 +294,12 @@ impl Migrate {
                 Print(":: write new encrypted files\n"),
                 SetForegroundColor(Color::Yellow),
                 Print(format!(
-                    "-> [{}{}{}] {} total\n",
+                    "-> [{}{}{}] {}% {} file\n",
                     "-".repeat(i / (total / (total / 2))),
                     ">",
                     "".repeat((total / (total / (total / 2))) - (i / (total / (total / 2)))),
-                    i
+                    prog,
+                    i + 1
                 )),
             );
             // line
@@ -371,7 +386,7 @@ fn progress_crossterm() {
             Print(":: Write new encrypted files\n"),
             SetForegroundColor(Color::Cyan),
             Print(format!(
-                ":: [{}{}{}] {}\n",
+                ":: [{}{}{}] {}% {} file\n",
                 // 0/(22/(22/2)) -> 0
                 // 1/(22/(22/2)) -> 0.5
                 // 2/(22/(22/2)) -> 1
@@ -382,7 +397,8 @@ fn progress_crossterm() {
                 // (100/(100/(100/2))) - (1 / (100/(100/2)) -> 49.5
                 " ".repeat((total / (total / (total / 2))) - (i / (total / (total / 2)))),
                 // " ".repeat((w / 2) as usize),
-                i
+                ((i as f32 / total as f32) * (100) as f32).floor(),
+                i + 1
             )),
         );
         // pin log in bottom
