@@ -111,3 +111,64 @@ pub fn clipboard_copy(params: &str, timeout: i32) {
     // clear clipboard specific time duration, default timeout is 30 in fn init_options_4
     clipboard.clear_clipboard(timeout);
 }
+
+pub fn username_copy(params: &str, timeout: i32) {
+    let session = env::var(SESSION).unwrap();
+    let mut clipboard = Clip::new(session.as_str());
+    if clipboard.get_binaries().is_none() {
+        println!(
+            "No binaries availble to copy to clipboard in sessions type: {}.",
+            session
+        )
+    }
+
+    // get full path
+    let configpath =
+        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
+    let config = read_config_file(&configpath).unwrap();
+    let filename = read_full_filename(params, &config.store.path);
+    let plaintext = decrypt_with_params(&filename);
+
+    // copy only the first line
+    let plaintext_vec: Vec<&str> = plaintext.split("\n").collect();
+    if plaintext_vec.is_empty() || plaintext.is_empty() {
+        panic!(
+            "{} {} {:#?}",
+            "::".bright_blue(),
+            " oops nothing to copy maybe missing file!".bright_red(),
+            params
+        )
+    }
+    clipboard.copy(plaintext_vec[1]);
+
+    // clear clipboard specific time duration, default timeout is 30 in fn init_options_4
+    clipboard.clear_clipboard(timeout);
+}
+pub fn username_show(params: &str) {
+    let session = env::var(SESSION).unwrap();
+    let mut clipboard = Clip::new(session.as_str());
+    if clipboard.get_binaries().is_none() {
+        println!(
+            "No binaries availble to copy to clipboard in sessions type: {}.",
+            session
+        )
+    }
+
+    // get full path
+    let configpath =
+        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
+    let config = read_config_file(&configpath).unwrap();
+    let filename = read_full_filename(params, &config.store.path);
+    let plaintext = decrypt_with_params(&filename);
+
+    // copy only the first line
+    let plaintext_vec: Vec<&str> = plaintext.split("\n").collect();
+    if plaintext_vec.is_empty() || plaintext.is_empty() {
+        panic!(
+            "{} {}",
+            "::".bright_blue(),
+            " oops nothing to copy maybe missing file!".bright_red()
+        )
+    }
+    println!("{}", plaintext_vec[1]);
+}
