@@ -25,7 +25,7 @@ jobs:
           echo 'nameserver 1.1.0.0' >>/etc/resolv.conf
 
       - name: Install dependencies
-        run: pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel cmake ninja curl jq nodejs git github-cli
+        run: pacman --noconfirm -Syu && pacman --needed --noconfirm -S base-devel cmake ninja curl jq nodejs git github-cli wget gzip
 
       - name: Checkout code
         uses: https://code.forgejo.org/actions/checkout@v5
@@ -38,7 +38,11 @@ jobs:
       - name: Forgejo Cli
         shell: bash
         run: |
-          cargo install forgejo-cli
+          wget https://codeberg.org/forgejo-contrib/forgejo-cli/releases/download/v0.3.0/forgejo-cli-linux.gz
+          gzip -dk forgejo-cli-linux.gz
+          mv forgejo-cli-linux fj
+          chmod +x fj
+          install -Dm755 fj /usr/local/bin/
           fj version
           echo "------------------------"
           echo "Forgejo install success."
