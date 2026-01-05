@@ -22,12 +22,14 @@ Command:
   insert        <YOUR/DATA/STORE>       Insert new secret.
   edit          <YOUR/DATA/STORE>       Edit secret.
   delete        <YOUR/DATA/STORE>       Delete a secret.
-  show -s       <YOUR/DATA/STORE>       Show secret
+  show          <YOUR/DATA/STORE>       Show secret
   totp          <YOUR/DATA/STORE>       Display totp every 30
-  totp -c       <YOUR/DATA/STORE>       Copy totp into clipboard
+        -c      <YOUR/DATA/STORE>       Copy totp into clipboard
   ls                                    List of secrets
   ls            <YOUR/DATA/STORE>       List of secrets
   migrate       <YOUR GPG KEY NAME>     Migrate boxpaperpass to new key
+        -d      <SOURCE PATH>           Contain source path
+        -t      <DEST PATH>             Contain dest path
 ```
 
 ### format password with otpauth

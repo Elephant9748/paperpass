@@ -76,7 +76,7 @@ pub fn prompt_help() {
     );
     println!(
         "{}{}",
-        "  show -s\t<YOUR/DATA/STORE>".cyan(),
+        "  show\t\t<YOUR/DATA/STORE>".cyan(),
         "\tShow secret".white()
     );
     println!(
@@ -86,7 +86,7 @@ pub fn prompt_help() {
     );
     println!(
         "{}{}",
-        "  totp -c\t<YOUR/DATA/STORE>".cyan(),
+        "\t-c\t<YOUR/DATA/STORE>".cyan(),
         "\tCopy totp into clipboard".white()
     );
     println!("{}{}", "  ls".cyan(), "\t\t\t\t\tList of secrets".white());
@@ -99,6 +99,16 @@ pub fn prompt_help() {
         "{}{}",
         "  migrate\t<YOUR GPG KEY NAME>".cyan(),
         "\tMigrate boxpaperpass to new key".white()
+    );
+    println!(
+        "{}{}",
+        "\t-d \t<SOURCE PATH>".cyan(),
+        "\t\tContain source path".white()
+    );
+    println!(
+        "{}{}",
+        "\t-t \t<DEST PATH>".cyan(),
+        "\t\tContain dest path".white()
     );
     println!(
         "\n{}{} {} ({} {})\n",
