@@ -14,12 +14,12 @@ pub fn prompt_help() {
     println!(
         "{}{}",
         "  -c <YOUR/DATA/STORE>".cyan(),
-        "\t\tCopy to clipboard".white()
+        "\t\tCopy password to clipboard".white()
     );
     println!(
         "{}{}",
-        "     -time <TIME>".cyan(),
-        "\t\tCopy to clipboard with autoclear after amount of sec TIME=NUMBER default is 30 sec"
+        "  -time <TIME>".cyan(),
+        "\t\t\tCopy to clipboard with autoclear after amount of sec TIME=NUMBER default is 30 sec"
             .white()
     );
     println!("{}{}", "  -h --help".cyan(), "\t\t\tPrint help".white());
@@ -46,18 +46,28 @@ pub fn prompt_help() {
     );
     println!(
         "{}{}",
-        "      -c\t~/<YOUR CONFIG PATH>".cyan(),
+        "\t-c\t~/<YOUR CONFIG PATH>".cyan(),
         "\tWhere config saved, must have ~/ or the full path".white()
     );
     println!(
         "{}{}",
-        "      -s\t~/<YOUR DATA STORE>".cyan(),
+        "\t-s\t~/<YOUR DATA STORE>".cyan(),
         "\tWhere data store must have ~/ or the full path".white()
     );
     println!(
         "{}{}",
-        "      -pk\t<YOUR GPG KEY>".cyan(),
+        "\t-pk\t<YOUR GPG KEY>".cyan(),
         "\t\tSet which key to used (name of key)".white()
+    );
+    println!(
+        "{}{}",
+        "  user\t\t<YOUR/DATA/STORE>".cyan(),
+        "\tShow only username".white()
+    );
+    println!(
+        "{}{}",
+        "\t-c\t<YOUR/DATA/STORE>".cyan(),
+        "\tCopy username into clipboard".white()
     );
     println!(
         "{}{}",
