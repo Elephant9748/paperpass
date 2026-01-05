@@ -172,6 +172,9 @@ pub fn init_options_6(paperpass_args: Vec<String>) {
     let index_a = get_index(paperpass_args.to_owned(), "-s");
     let index_c = get_index(paperpass_args.to_owned(), "-pk");
     let index_b = get_index(paperpass_args.to_owned(), "-c");
+    let index_d = get_index(paperpass_args.to_owned(), "migrate");
+    let index_e = get_index(paperpass_args.to_owned(), "-d");
+    let index_f = get_index(paperpass_args.to_owned(), "-t");
     if paperpass_args.contains(&"init".to_string())
         && paperpass_args.contains(&"-pk".to_string())
         && paperpass_args.contains(&"-s".to_string())
@@ -193,6 +196,15 @@ pub fn init_options_6(paperpass_args: Vec<String>) {
             "".to_owned(),
             paperpass_args[index_c + 1].to_owned(),
             "y".to_owned(),
+        ));
+    } else if paperpass_args.contains(&"migrate".to_string())
+        && paperpass_args.contains(&"-t".to_string())
+        && paperpass_args.contains(&"-d".to_string())
+    {
+        args_options(Opt::MigrateExternal(
+            paperpass_args[index_d + 1].to_owned(),
+            paperpass_args[index_e + 1].to_owned(),
+            paperpass_args[index_f + 1].to_owned(),
         ));
     } else {
         println!(

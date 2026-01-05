@@ -1,5 +1,5 @@
 use crate::{
-    config::init_config_with_params,
+    config::{configfile::home_path, init_config_with_params},
     utils::{
         insert::insert_for_migration,
         ls::{Dirs, Ls},
@@ -30,6 +30,7 @@ pub fn send_to_another_box(params: String) {
     let th_handle1 = thread::spawn(move || {
         thread::sleep(Duration::from_millis(50));
         let mut lss_th = th1.lock().expect(":: lss.lock() failed");
+        lss_th.set_fpath();
         lss_th.set_files();
     });
     th_handles.push(th_handle1);
@@ -63,11 +64,51 @@ pub fn send_to_another_box(params: String) {
     // progress_crossterm();
 }
 
+pub fn send_to_another_box_external(params: String, dpath: String, tpath: String) {
+    let lss = Arc::new(Mutex::new(Migrate::new(Ls::new("".to_string()))));
+    let mut th_handles = Vec::new();
+
+    let th1 = Arc::clone(&lss);
+    let th_handle1 = thread::spawn(move || {
+        thread::sleep(Duration::from_millis(50));
+        let mut lss_th = th1.lock().expect(":: lss.lock() failed");
+        let valid_dpath = home_path(dpath.to_owned()).unwrap();
+        let valid_tpath = home_path(tpath.to_owned()).unwrap();
+        lss_th.set_files_external(&valid_dpath);
+        lss_th.set_dest_target_path(valid_dpath, valid_tpath);
+    });
+    th_handles.push(th_handle1);
+
+    let th2 = Arc::clone(&lss);
+    let th_handle2 = thread::spawn(move || {
+        thread::sleep(Duration::from_millis(100));
+        let mut lss_th = th2.lock().expect(":: lss.lock() failed");
+        lss_th.open_encrypted_files();
+    });
+    th_handles.push(th_handle2);
+
+    for th in th_handles {
+        th.join().expect(":: join thread failed");
+    }
+
+    let th3 = Arc::clone(&lss);
+    let par = params.to_owned();
+    let th_handle3 = thread::spawn(move || {
+        let mut lss_th = th3.lock().expect(":: lss.lock() failed");
+        lss_th.write_new_encrypted_files(par.as_str());
+    });
+
+    th_handle3.join().expect(":: join th_handle3 failed");
+}
+
 #[derive(Debug, Clone)]
 struct Migrate {
     ls: Ls,
     files: Vec<String>,
-    h: BTreeMap<String, String>,
+    open: BTreeMap<String, String>,
+    fpath: i16,
+    dpath: String,
+    tpath: String,
 }
 
 impl Migrate {
@@ -75,7 +116,10 @@ impl Migrate {
         Self {
             ls,
             files: Vec::new(),
-            h: BTreeMap::new(),
+            open: BTreeMap::new(),
+            fpath: 0,
+            dpath: String::new(),
+            tpath: String::new(),
         }
     }
     //all file in the store path into vector
@@ -88,6 +132,21 @@ impl Migrate {
             .expect(":: Failed get Dirs (send_to_another_box)");
         let files = dirs.flattern_dirs("");
         self.files = files;
+    }
+    fn set_files_external(&mut self, path: &str) {
+        let mut dirs = Dirs::new(path);
+        self.ls
+            .get_to_dirs(&mut dirs, path.into())
+            .expect(":: Failed get Dirs (send_to_another_box)");
+        let files = dirs.flattern_dirs("");
+        self.files = files.iter().map(|x| path.to_owned() + "/" + x).collect();
+    }
+    fn set_fpath(&mut self) {
+        self.fpath = 1;
+    }
+    fn set_dest_target_path(&mut self, dpath: String, tpath: String) {
+        self.dpath = dpath;
+        self.tpath = tpath;
     }
     fn open_encrypted_files(&mut self) {
         let mut stdout = stdout();
@@ -108,9 +167,14 @@ impl Migrate {
                 t = (h - 4) as isize - 1;
             }
 
-            let d_replace = d.replace(".asc", "");
-            let open = show_with_params_noprint(&d_replace, 1);
-            self.h.insert(d_replace.to_owned(), open);
+            if self.fpath == 1 {
+                let d_replace = d.replace(".asc", "");
+                let open = show_with_params_noprint(&d_replace, self.fpath);
+                self.open.insert(d_replace.to_owned(), open);
+            } else {
+                let open = show_with_params_noprint(d, self.fpath);
+                self.open.insert(d.to_owned(), open);
+            }
 
             let _ = execute!(
                 stdout,
@@ -162,12 +226,22 @@ impl Migrate {
         stdout.flush().unwrap();
     }
     fn write_new_encrypted_files(&mut self, params: &str) {
-        self.ls.get_store_path();
-        let path = self.ls.store_path.to_owned();
-        let migrate_path = path + "_" + params;
-        if !Path::new(&migrate_path).exists() {
-            std::fs::create_dir_all(&migrate_path)
-                .expect(":: failed to create directory for migrate_path");
+        #[allow(unused_assignments)]
+        let mut migrate_path = String::from("");
+        if self.fpath == 0 {
+            migrate_path = self.tpath.to_owned();
+            if !Path::new(&migrate_path).exists() {
+                std::fs::create_dir_all(&migrate_path)
+                    .expect(":: failed to create directory for migrate_path");
+            }
+        } else {
+            self.ls.get_store_path();
+            let path = self.ls.store_path.to_owned();
+            migrate_path = path + "_" + params;
+            if !Path::new(&migrate_path).exists() {
+                std::fs::create_dir_all(&migrate_path)
+                    .expect(":: failed to create directory for migrate_path");
+            }
         }
 
         let mut stdout = stdout();
@@ -181,14 +255,23 @@ impl Migrate {
         let mut c = 0;
         #[allow(unused_assignments)]
         let mut t = 0;
-        let total = self.h.len();
-        for (i, (k, v)) in self.h.iter().enumerate() {
+        let total = self.open.len();
+        for (i, (k, v)) in self.open.iter().enumerate() {
             if i != 0 {
                 t = (h - 6) as isize - (i + c) as isize;
             } else {
                 t = (h - 6) as isize - 1;
             }
-            insert_for_migration(k, v, &migrate_path, params);
+
+            #[allow(unused_assignments)]
+            let mut k1 = String::from("");
+            if self.fpath == 0 {
+                let x = k.replace(self.dpath.as_str(), "").replace(".asc", "");
+                k1 = x;
+            } else {
+                k1 = k.to_string();
+            }
+            insert_for_migration(k1.as_str(), v, &migrate_path, params);
             let _ = execute!(
                 stdout,
                 MoveTo(0, h - 5),

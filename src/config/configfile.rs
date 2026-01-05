@@ -125,6 +125,35 @@ pub fn set_store_path(p: String) -> Result<String, String> {
     }
 }
 
+pub fn home_path(p: String) -> Result<String, String> {
+    if p.starts_with("~") {
+        let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
+        let mut full_home_dir = PathBuf::from(home_dir);
+        full_home_dir.push(&p[2..]);
+        if check_valid(Valid::Path(full_home_dir.display().to_string())) {
+            Ok(full_home_dir.display().to_string())
+        } else {
+            let path = force_create_dir(full_home_dir.display().to_string());
+            Ok(path)
+        }
+    } else if p.starts_with("$HOME") {
+        let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
+        let mut full_home_dir = PathBuf::from(home_dir);
+        full_home_dir.push(&p[6..]);
+        if check_valid(Valid::Path(full_home_dir.display().to_string())) {
+            Ok(full_home_dir.display().to_string())
+        } else {
+            let path = force_create_dir(full_home_dir.display().to_string());
+            Ok(path)
+        }
+    } else if p.is_empty() {
+        Err("--> Validate ~/, $HOME : PATH is empty".to_string())
+    } else {
+        let path = force_create_dir(p);
+        Ok(path)
+    }
+}
+
 pub fn set_git(g: String) -> Result<bool, String> {
     if g == "y" || g == "Y" {
         Ok(true)

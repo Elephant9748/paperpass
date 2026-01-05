@@ -9,7 +9,29 @@ use crate::utils::binaries::bin_in_box;
 
 pub fn encrypt_with_params(saved_path: &str, plaintext: &str, uid: &str, file_path: &str) -> bool {
     let run_bin = bin_in_box().unwrap();
+
     // path output *.asc
+    // #[allow(unused_assignments)]
+    // let mut output = String::from("");
+    // if file_path.contains("home") || file_path.contains(".asc") {
+    //     // for migrate external path
+    //     let path_out = saved_path.to_owned();
+    //     let mut file_name = String::from("");
+    //     if let Some(x) = file_path.rfind('/') {
+    //         let y = &file_path[x + 1..];
+    //         file_name = y.to_string()
+    //     }
+    //
+    //     output = path_out + "/" + file_name.as_str();
+    //     println!("{} Saved to {}", "::".bright_blue(), output);
+    // } else {
+    //     let path_out = saved_path.to_owned() + "/" + file_path;
+    //
+    //     // force create dir & filename
+    //     output = create_filename(&path_out.to_owned());
+    //     println!("{} Saved to {}", "::".bright_blue(), output);
+    // }
+
     let path_out = saved_path.to_owned() + "/" + file_path;
 
     // force create dir & filename
