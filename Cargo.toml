@@ -14,4 +14,12 @@ totp-rs = { version = "5.7.0", features = ["otpauth", "url"] }
 [build-dependencies]
 chrono = "0.4.42"
 
+# optimize size
+# cargo build --profile release-small
+[profile.release-small]
+inherits = "release"
+strip = "debuginfo"
+opt-level = 's'
+lto = true
+codegen-units = 1
 
