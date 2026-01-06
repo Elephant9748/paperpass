@@ -66,25 +66,63 @@ impl Dirs {
     pub fn add_file(&mut self, file: &str) {
         self.file.push(file.to_string());
     }
-    pub fn print_in_trees(&mut self, indent: usize, dept: usize) {
-        for f in &self.file {
-            println!(
-                "{}{}{}",
-                " ".repeat(indent + dept),
-                "└── ".bright_yellow(),
-                f.to_string().green()
-            )
+    // 0 4
+    // 4 4
+    // 8 4
+    // 12 4
+    pub fn print_in_trees(&mut self, indent: usize, dept: usize, last_dir: usize) {
+        for (i, f) in self.file.iter().enumerate() {
+            if last_dir < 1 {
+                match i {
+                    x if x == self.file.len() - 1 => {
+                        print!("{}", " ".repeat((indent + dept) - dept));
+                        print!("{}", "│".bright_yellow());
+                        print!("{}", " ".repeat(dept));
+                        print!("{}", "└── ".bright_yellow());
+                        println!(" {}", f.to_string().green());
+                    }
+                    _ => {
+                        print!("{}", " ".repeat((indent + dept) - dept));
+                        print!("{}", "│".bright_yellow());
+                        print!("{}", " ".repeat(dept));
+                        print!("{}", "├──".bright_yellow());
+                        println!(" {}", f.to_string().green());
+                    }
+                }
+            } else {
+                match i {
+                    x if x == self.file.len() - 1 => {
+                        print!("{}", " ".repeat(indent + dept + 1));
+                        print!("{}", "└── ".bright_yellow());
+                        println!(" {}", f.to_string().green());
+                    }
+                    _ => {
+                        print!("{}", " ".repeat(indent + dept + 1));
+                        print!("{}", "├──".bright_yellow());
+                        println!(" {}", f.to_string().green());
+                    }
+                }
+            }
         }
 
-        for (key, value) in &mut self.subdir {
-            println!(
-                "{}{}{}{}",
-                " ".repeat(indent + dept),
-                "└── ".bright_yellow(),
-                key.bright_cyan(),
-                "/".bright_cyan()
-            );
-            value.print_in_trees(indent + dept, dept);
+        let y = self.subdir.len();
+        for (i, (key, value)) in self.subdir.iter_mut().enumerate() {
+            match i {
+                x if x == y - 1 => {
+                    print!("{}", " ".repeat(indent + dept));
+                    print!("{}", "└── ".bright_yellow());
+                    print!("{}", key.bright_cyan());
+                    println!("{}", "/".bright_cyan());
+                    value.print_in_trees(indent + dept, dept, 1);
+                }
+                _ => {
+                    print!("{}", " ".repeat(indent + dept));
+                    print!("{}", "├── ".bright_yellow());
+                    print!("{}", key.bright_cyan());
+                    println!("{}", "/".bright_cyan());
+                    value.print_in_trees(indent + dept, dept, 0);
+                }
+            }
         }
     }
     pub fn flattern_dirs(&mut self, subdir_name: &str) -> Vec<String> {
@@ -120,7 +158,7 @@ pub fn list_dir_with_params(params: &str) {
 
     // println!("{:#?}", dirs);
     println!("{}", dirs.name.bright_red());
-    dirs.print_in_trees(0, 4);
+    dirs.print_in_trees(0, 4, 1);
 }
 
 pub fn list_dir_root() {
@@ -133,5 +171,5 @@ pub fn list_dir_root() {
 
     // println!("{:#?}", dirs);
     println!("{}", "paperpass".bright_red());
-    dirs.print_in_trees(0, 4);
+    dirs.print_in_trees(0, 4, 0);
 }
