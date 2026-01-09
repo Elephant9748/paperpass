@@ -78,7 +78,7 @@ impl Dirs {
                         print!("{}", " ".repeat((indent + dept) - dept));
                         print!("{}", "│".bright_yellow());
                         print!("{}", " ".repeat(dept));
-                        print!("{}", "└── ".bright_yellow());
+                        print!("{}", "└──".bright_yellow());
                         println!(" {}", f.to_string().green());
                     }
                     _ => {
@@ -93,7 +93,7 @@ impl Dirs {
                 match i {
                     x if x == self.file.len() - 1 => {
                         print!("{}", " ".repeat(indent + dept + 1));
-                        print!("{}", "└── ".bright_yellow());
+                        print!("{}", "└──".bright_yellow());
                         println!(" {}", f.to_string().green());
                     }
                     _ => {
@@ -110,14 +110,14 @@ impl Dirs {
             match i {
                 x if x == y - 1 => {
                     print!("{}", " ".repeat(indent + dept));
-                    print!("{}", "└── ".bright_yellow());
+                    print!("{}", "└──".bright_yellow());
                     print!("{}", key.bright_cyan());
                     println!("{}", "/".bright_cyan());
                     value.print_in_trees(indent + dept, dept, 1);
                 }
                 _ => {
                     print!("{}", " ".repeat(indent + dept));
-                    print!("{}", "├── ".bright_yellow());
+                    print!("{}", "├──".bright_yellow());
                     print!("{}", key.bright_cyan());
                     println!("{}", "/".bright_cyan());
                     value.print_in_trees(indent + dept, dept, 0);

@@ -60,97 +60,110 @@ pub fn set_options_config_path() -> Result<&'static str, String> {
 }
 
 pub fn set_config_path(p: String) -> Result<String, String> {
-    if p.starts_with("~") {
-        let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
-        let mut full_home_dir = PathBuf::from(home_dir);
-        full_home_dir.push(&p[2..]);
-        if check_valid(Valid::Path(full_home_dir.display().to_string())) {
-            Ok(full_home_dir.display().to_string())
-        } else {
-            let path = force_create_dir(full_home_dir.display().to_string());
+    match p {
+        ref x if x.starts_with("~") => {
+            let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
+            let mut full_home_dir = PathBuf::from(home_dir);
+            full_home_dir.push(&p[2..]);
+            if check_valid(Valid::Path(full_home_dir.display().to_string())) {
+                Ok(full_home_dir.display().to_string())
+            } else {
+                let path = force_create_dir(full_home_dir.display().to_string());
+                Ok(path)
+            }
+        }
+        ref x if x.starts_with("HOME") => {
+            let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
+            let mut full_home_dir = PathBuf::from(home_dir);
+            full_home_dir.push(&p[6..]);
+            if check_valid(Valid::Path(full_home_dir.display().to_string())) {
+                Ok(full_home_dir.display().to_string())
+            } else {
+                let path = force_create_dir(full_home_dir.display().to_string());
+                Ok(path)
+            }
+        }
+        ref x if x.is_empty() => {
+            let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
+            let mut default_path = PathBuf::from(home_dir);
+            default_path.push(".config/paperpass");
+            let path = force_create_dir(default_path.display().to_string());
             Ok(path)
         }
-    } else if p.starts_with("$HOME") {
-        let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
-        let mut full_home_dir = PathBuf::from(home_dir);
-        full_home_dir.push(&p[6..]);
-        if check_valid(Valid::Path(full_home_dir.display().to_string())) {
-            Ok(full_home_dir.display().to_string())
-        } else {
-            let path = force_create_dir(full_home_dir.display().to_string());
+        _ => {
+            let path = force_create_dir(p);
             Ok(path)
         }
-    } else if p.is_empty() {
-        let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
-        let mut default_path = PathBuf::from(home_dir);
-        default_path.push(".config/paperpass");
-        let path = force_create_dir(default_path.display().to_string());
-        Ok(path)
-    } else {
-        let path = force_create_dir(p);
-        Ok(path)
     }
 }
 
 pub fn set_store_path(p: String) -> Result<String, String> {
-    if p.starts_with("~") {
-        let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
-        let mut full_home_dir = PathBuf::from(home_dir);
-        full_home_dir.push(&p[2..]);
-        if check_valid(Valid::Path(full_home_dir.display().to_string())) {
-            Ok(full_home_dir.display().to_string())
-        } else {
-            let path = force_create_dir(full_home_dir.display().to_string());
+    match p {
+        ref y if y.starts_with("~") => {
+            let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
+            let mut full_home_dir = PathBuf::from(home_dir);
+            full_home_dir.push(&p[2..]);
+            if check_valid(Valid::Path(full_home_dir.display().to_string())) {
+                Ok(full_home_dir.display().to_string())
+            } else {
+                let path = force_create_dir(full_home_dir.display().to_string());
+                Ok(path)
+            }
+        }
+        ref y if y.starts_with("HOME") => {
+            let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
+            let mut full_home_dir = PathBuf::from(home_dir);
+            full_home_dir.push(&p[6..]);
+            if check_valid(Valid::Path(full_home_dir.display().to_string())) {
+                Ok(full_home_dir.display().to_string())
+            } else {
+                let path = force_create_dir(full_home_dir.display().to_string());
+                Ok(path)
+            }
+        }
+        ref y if y.is_empty() => {
+            let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
+            let mut default_path = PathBuf::from(home_dir);
+            default_path.push("paperpass_store");
+            let path = force_create_dir(default_path.display().to_string());
             Ok(path)
         }
-    } else if p.starts_with("$HOME") {
-        let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
-        let mut full_home_dir = PathBuf::from(home_dir);
-        full_home_dir.push(&p[6..]);
-        if check_valid(Valid::Path(full_home_dir.display().to_string())) {
-            Ok(full_home_dir.display().to_string())
-        } else {
-            let path = force_create_dir(full_home_dir.display().to_string());
+        _ => {
+            let path = force_create_dir(p);
             Ok(path)
         }
-    } else if p.is_empty() {
-        let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
-        let mut default_path = PathBuf::from(home_dir);
-        default_path.push("paperpass_store");
-        let path = force_create_dir(default_path.display().to_string());
-        Ok(path)
-    } else {
-        let path = force_create_dir(p);
-        Ok(path)
     }
 }
 
 pub fn home_path(p: String) -> Result<String, String> {
-    if p.starts_with("~") {
-        let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
-        let mut full_home_dir = PathBuf::from(home_dir);
-        full_home_dir.push(&p[2..]);
-        if check_valid(Valid::Path(full_home_dir.display().to_string())) {
-            Ok(full_home_dir.display().to_string())
-        } else {
-            let path = force_create_dir(full_home_dir.display().to_string());
+    match p {
+        ref z if z.starts_with("~") => {
+            let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
+            let mut full_home_dir = PathBuf::from(home_dir);
+            full_home_dir.push(&p[2..]);
+            if check_valid(Valid::Path(full_home_dir.display().to_string())) {
+                Ok(full_home_dir.display().to_string())
+            } else {
+                let path = force_create_dir(full_home_dir.display().to_string());
+                Ok(path)
+            }
+        }
+        ref z if z.starts_with("HOME") => {
+            let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
+            let mut full_home_dir = PathBuf::from(home_dir);
+            full_home_dir.push(&p[6..]);
+            if check_valid(Valid::Path(full_home_dir.display().to_string())) {
+                Ok(full_home_dir.display().to_string())
+            } else {
+                let path = force_create_dir(full_home_dir.display().to_string());
+                Ok(path)
+            }
+        }
+        ref z if z.is_empty() => Err("--> Validate ~/, $HOME : PATH is empty".to_string()),
+        _ => {
+            let path = force_create_dir(p);
             Ok(path)
         }
-    } else if p.starts_with("$HOME") {
-        let home_dir = env::var("HOME").expect(":: VAR $HOME doesnt exists");
-        let mut full_home_dir = PathBuf::from(home_dir);
-        full_home_dir.push(&p[6..]);
-        if check_valid(Valid::Path(full_home_dir.display().to_string())) {
-            Ok(full_home_dir.display().to_string())
-        } else {
-            let path = force_create_dir(full_home_dir.display().to_string());
-            Ok(path)
-        }
-    } else if p.is_empty() {
-        Err("--> Validate ~/, $HOME : PATH is empty".to_string())
-    } else {
-        let path = force_create_dir(p);
-        Ok(path)
     }
 }
 
