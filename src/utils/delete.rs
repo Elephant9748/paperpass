@@ -1,13 +1,21 @@
-use std::{env, path::Path};
+use std::{env, path::Path, process::exit};
 
 use colored::Colorize;
 
 use crate::{
+    catch_stdin,
     errors::err::{Error, message},
     utils::{manage_env::ENV_CONFIG, read_config_file, valid_store_path},
 };
 
 pub fn delete_with_params(params: &str) {
+    print!("{}", "\nare you sure to delete y/n: ".bright_yellow());
+    let confirm = catch_stdin();
+
+    if confirm == "n" || confirm == "no" {
+        exit(1);
+    }
+
     let configpath =
         env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
     let config = read_config_file(&configpath).unwrap();
