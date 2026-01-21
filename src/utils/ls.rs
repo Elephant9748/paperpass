@@ -110,15 +110,15 @@ impl Dirs {
             match i {
                 x if x == y - 1 => {
                     print!("{}", " ".repeat(indent + dept));
-                    print!("{}", "└── ".bright_yellow());
-                    print!("{}", key.bright_cyan());
+                    print!("{}", "└──".bright_yellow());
+                    print!(" {}", key.bright_cyan());
                     println!("{}", "/".bright_cyan());
                     value.print_in_trees(indent + dept, dept, 1);
                 }
                 _ => {
                     print!("{}", " ".repeat(indent + dept));
-                    print!("{}", "├── ".bright_yellow());
-                    print!("{}", key.bright_cyan());
+                    print!("{}", "├──".bright_yellow());
+                    print!(" {}", key.bright_cyan());
                     println!("{}", "/".bright_cyan());
                     value.print_in_trees(indent + dept, dept, 0);
                 }
@@ -156,7 +156,6 @@ pub fn list_dir_with_params(params: &str) {
     let mut dirs = Dirs::new(params);
     ls.get_to_dirs(&mut dirs, full_path.into()).unwrap();
 
-    // println!("{:#?}", dirs);
     println!("{}", dirs.name.bright_red());
     dirs.print_in_trees(0, 4, 1);
 }
