@@ -32,6 +32,7 @@ Command:
   migrate       <YOUR GPG KEY NAME>     Migrate boxpaperpass to new key
         -d      <SOURCE PATH>           Contain source path
         -t      <DEST PATH>             Contain dest path
+  genpass       <LENGTH>                Generate Passwords !not include Extended ASCII
 ```
 
 ### format doc inside encrypted file

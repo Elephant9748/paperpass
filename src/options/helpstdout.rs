@@ -122,8 +122,8 @@ pub fn prompt_help() {
     );
     println!(
         "{}{}",
-        "  genpass\t<Length>".cyan(),
-        "\t\tGenerate Passwords".white()
+        "  genpass\t<LENGTH>".cyan(),
+        "\t\tGenerate Passwords !not include Extended ASCII".white()
     );
     println!(
         "\n{}{} {} ({} {})\n",
