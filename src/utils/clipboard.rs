@@ -85,7 +85,7 @@ pub fn clipboard_copy(params: &str, timeout: i32) {
     let mut clipboard = Clip::new(session.as_str());
     if clipboard.get_binaries().is_none() {
         println!(
-            "No binaries availble to copy to clipboard in sessions type: {}.",
+            "No binaries available to copy to clipboard in sessions type: {}.",
             session
         )
     }
@@ -109,6 +109,19 @@ pub fn clipboard_copy(params: &str, timeout: i32) {
     clipboard.copy(plaintext_vec[0]);
 
     // clear clipboard specific time duration, default timeout is 30 in fn init_options_4
+    clipboard.clear_clipboard(timeout);
+}
+
+pub fn copy_clipboard_single_line(params: &str, timeout: i32) {
+    let session = env::var(SESSION).unwrap();
+    let mut clipboard = Clip::new(session.as_str());
+    if clipboard.get_binaries().is_none() {
+        println!(
+            "No binaries available to copy to clipboard in sessions type: {}.",
+            session
+        )
+    }
+    clipboard.copy(params);
     clipboard.clear_clipboard(timeout);
 }
 

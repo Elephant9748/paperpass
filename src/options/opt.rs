@@ -5,9 +5,10 @@ use crate::{
     gpg::helper::{GpgHelper, listprivatekeys},
     options::helpstdout::prompt_help,
     utils::{
-        clipboard::{clipboard_copy, username_copy, username_show},
+        clipboard::{clipboard_copy, copy_clipboard_single_line, username_copy, username_show},
         delete::delete_with_params,
         edit::edit_with_params,
+        genpass::gen_password,
         insert::insert_with_params,
         ls::{list_dir_root, list_dir_with_params},
         migrate::{send_to_another_box, send_to_another_box_external},
@@ -35,6 +36,7 @@ pub enum Opt {
     MigrateExternal(String, String, String),
     Help,
     Version,
+    GenPass(i32, i32),
 }
 
 pub fn args_options(opt: Opt) {
@@ -76,6 +78,15 @@ pub fn args_options(opt: Opt) {
         Opt::Migrate(params) => send_to_another_box(params),
         Opt::MigrateExternal(p1, p2, p3) => send_to_another_box_external(p1, p2, p3),
         Opt::Help => prompt_help(),
+        Opt::GenPass(len, timeout) => {
+            let gen_pass = gen_password(len.try_into().unwrap());
+            println!(
+                "{}{}",
+                "Password gen: ".bright_blue(),
+                gen_pass.to_owned().unwrap().bright_yellow()
+            );
+            copy_clipboard_single_line(gen_pass.unwrap().as_str(), timeout);
+        }
         Opt::Version => {
             let name = env!("CARGO_PKG_NAME");
             let version = env!("CARGO_PKG_VERSION");

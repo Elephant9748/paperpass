@@ -10,6 +10,7 @@ pub fn init_options_2(paperpass_args: Vec<String>) {
     let edit_index = get_index(paperpass_args.to_owned(), "edit");
     let delete_index = get_index(paperpass_args.to_owned(), "delete");
     let user_index = get_index(paperpass_args.to_owned(), "user");
+    let genpass = get_index(paperpass_args.to_owned(), "genpass");
     if paperpass_args.contains(&"insert".to_string()) {
         args_options(Opt::InsertParams(
             paperpass_args[insert_index + 1].to_owned(),
@@ -45,6 +46,14 @@ pub fn init_options_2(paperpass_args: Vec<String>) {
         args_options(Opt::ListDir(paperpass_args[show_index + 1].to_owned()));
     } else if paperpass_args.contains(&"migrate".to_string()) {
         args_options(Opt::Migrate(paperpass_args[show_index + 1].to_owned()));
+    } else if paperpass_args.contains(&"genpass".to_string()) {
+        // default clear clipboard timeout is 30sec
+        args_options(Opt::GenPass(
+            paperpass_args[genpass + 1]
+                .parse::<i32>()
+                .unwrap_or_else(|_| panic!("> cant parse i32 on GenPass length")),
+            30,
+        ));
     } else {
         println!(
             "{}{}",
@@ -106,6 +115,7 @@ pub fn init_options_4(paperpass_args: Vec<String>) {
     let index_a = get_index(paperpass_args.to_owned(), "-c");
     let index_b = get_index(paperpass_args.to_owned(), "-time");
     let index_c = get_index(paperpass_args.to_owned(), "-pk");
+    let genpass = get_index(paperpass_args.to_owned(), "genpass");
     if paperpass_args.contains(&"-c".to_string()) && paperpass_args.contains(&"-time".to_string()) {
         args_options(Opt::Copy(
             paperpass_args[index_a + 1].to_owned(),
@@ -123,6 +133,18 @@ pub fn init_options_4(paperpass_args: Vec<String>) {
             "".to_owned(),
             paperpass_args[index_c + 1].to_owned(),
             "y".to_owned(),
+        ));
+    } else if paperpass_args.contains(&"genpass".to_string())
+        && paperpass_args.contains(&"-c".to_string())
+    {
+        // default clear clipboard timeout is 30sec
+        args_options(Opt::GenPass(
+            paperpass_args[genpass + 1]
+                .parse::<i32>()
+                .unwrap_or_else(|_| panic!("> cant parse i32 on GenPass length")),
+            paperpass_args[index_c + 1]
+                .parse::<i32>()
+                .unwrap_or_else(|_| panic!("> cant parse i32 on GenPass timeout")),
         ));
     } else {
         println!(

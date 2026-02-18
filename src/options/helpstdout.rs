@@ -121,6 +121,11 @@ pub fn prompt_help() {
         "\t\tContain dest path".white()
     );
     println!(
+        "{}{}",
+        "  genpass\t<Length>".cyan(),
+        "\t\tGenerate Passwords".white()
+    );
+    println!(
         "\n{}{} {} ({} {})\n",
         "Version: ".green(),
         name,
