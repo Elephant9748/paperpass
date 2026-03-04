@@ -4,16 +4,16 @@ version = "1.1.10"
 edition = "2024"
 
 [dependencies]
-chrono = "0.4.43"
+chrono = "0.4.44"
 colored = "3.1.1"
 crossterm = "0.29.0"
 passwords = "3.1.16"
 serde = { version = "1.0.228", features = ["derive"] }
-toml = "0.9.11"
+toml = "0.9.12"
 totp-rs = { version = "5.7.0", features = ["otpauth", "url"] }
 
 [build-dependencies]
-chrono = "0.4.43"
+chrono = "0.4.44"
 
 # optimize size
 # cargo build --profile release-small
