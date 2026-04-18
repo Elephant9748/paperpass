@@ -63,8 +63,7 @@ pub fn args_options(opt: Opt) {
                 "Depend on your gpg key available in ~/.gnupg".bright_cyan()
             );
             println!("{}", "Available pgp key: ".bright_green());
-            let mut i = 1;
-            for k in pk.get_all().unwrap().iter() {
+            for (i, k) in (1..).zip(pk.get_all().unwrap().iter()) {
                 println!(
                     "\t\t{}{}{} {}",
                     "[".bright_yellow(),
@@ -72,7 +71,6 @@ pub fn args_options(opt: Opt) {
                     "]".bright_yellow(),
                     k.bright_cyan()
                 );
-                i += 1;
             }
         }
         Opt::Migrate(params) => send_to_another_box(params),
