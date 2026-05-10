@@ -29,5 +29,5 @@ build () {
 
 package() {
   cd "$pkgname"
-  install -vDm755 -t "$pkgdir/usr/local/bin/" target/release/paperpass
+  install -vDm755 -t "$pkgdir/usr/local/bin/" target/release-small/paperpass
 }
