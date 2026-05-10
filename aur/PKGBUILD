@@ -1,7 +1,7 @@
 pkgname=paperpass
 pkgver=1.1.10
 pkgrel=2
-pkgdesc="Swaypaper Arch Package"
+pkgdesc="Paperpass Arch Package"
 url="https://codeberg.org/rigel254/paperpass"
 # source=("$pkgname::git+$url#branch=main")
 # source=("$pkgname::git+$url#tag=$pkgver")
@@ -20,9 +20,9 @@ options=(!debug)
 build () {
   cd "$pkgname"
 
-  if [[ $CARCH != x86_64 ]]; then
-    export CARGO_PROFILE_RELEASE_LTO=off
-  fi
+  # if [[ $CARCH != x86_64 ]]; then
+  #   export CARGO_PROFILE_RELEASE_LTO=off
+  # fi
   # cargo build --locked --profile release-small -j2
   # cargo build --offline --profile release-small -j2
   cargo build --profile release-small -j2
