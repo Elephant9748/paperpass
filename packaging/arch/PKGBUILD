@@ -23,7 +23,8 @@ build () {
   if [[ $CARCH != x86_64 ]]; then
     export CARGO_PROFILE_RELEASE_LTO=off
   fi
-  cargo build --locked --profile release-small -j2
+  # cargo build --locked --profile release-small -j2
+  cargo build --offline --profile release-small -j2
 }
 
 package() {
