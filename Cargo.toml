@@ -1,19 +1,20 @@
 [package]
 name = "paperpass"
-version = "1.1.10"
+version = "1.1.11"
 edition = "2024"
 
 [dependencies]
-chrono = "0.4.44"
+chrono = "0.4.45"
 colored = "3.1.1"
 crossterm = "0.29.0"
+csv = "1.4.0"
 passwords = "3.1.16"
 serde = { version = "1.0.228", features = ["derive"] }
 toml = "1.1.2"
 totp-rs = { version = "5.7.1", features = ["otpauth", "url"] }
 
 [build-dependencies]
-chrono = "0.4.44"
+chrono = "0.4.45"
 
 # optimize size
 # cargo build --profile release-small
