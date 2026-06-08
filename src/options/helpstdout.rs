@@ -126,6 +126,12 @@ pub fn prompt_help() {
         "\t\tGenerate Passwords !not include Extended ASCII".white()
     );
     println!(
+        "{}{}{}",
+        "  import\t<PATH>".cyan(),
+        "\t\t\timport .csv file from keepassxc ".white(),
+        "(csv not encrypted!)".yellow()
+    );
+    println!(
         "\n{}{} {} ({} {})\n",
         "Version: ".green(),
         name,

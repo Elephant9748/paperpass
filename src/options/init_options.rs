@@ -54,6 +54,8 @@ pub fn init_options_2(paperpass_args: Vec<String>) {
                 .unwrap_or_else(|_| panic!("> cant parse i32 on GenPass length")),
             30,
         ));
+    } else if paperpass_args.contains(&"import".to_string()) {
+        args_options(Opt::Import(paperpass_args[show_index + 1].to_owned()));
     } else {
         println!(
             "{}{}",

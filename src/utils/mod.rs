@@ -10,6 +10,7 @@ pub mod manage_env;
 pub mod migrate;
 pub mod show;
 pub mod totp;
+pub mod fromcsv;
 
 use std::{
     env,

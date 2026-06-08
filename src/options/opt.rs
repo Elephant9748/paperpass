@@ -8,6 +8,7 @@ use crate::{
         clipboard::{clipboard_copy, copy_clipboard_single_line, username_copy, username_show},
         delete::delete_with_params,
         edit::edit_with_params,
+        fromcsv::keepass_import_run,
         genpass::gen_password,
         insert::insert_with_params,
         ls::{list_dir_root, list_dir_with_params},
@@ -16,6 +17,7 @@ use crate::{
         totp::totp_create,
     },
 };
+use std::path::PathBuf;
 
 pub enum Opt {
     Init,
@@ -34,6 +36,7 @@ pub enum Opt {
     ListDirRoot,
     Migrate(String),
     MigrateExternal(String, String, String),
+    Import(String),
     Help,
     Version,
     GenPass(i32, i32),
@@ -91,6 +94,10 @@ pub fn args_options(opt: Opt) {
             let build_date = env!("DATE");
             let git_head_hash = env!("GIT_HASH");
             println!("{} {} ({} {})", name, version, git_head_hash, build_date);
+        }
+        Opt::Import(param) => {
+            let p = PathBuf::from(param);
+            keepass_import_run(p);
         }
     }
 }
