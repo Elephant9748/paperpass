@@ -7,6 +7,39 @@ use colored::Colorize;
 
 use crate::utils::binaries::bin_in_box;
 
+pub fn encrypt_with_params_clean(saved_path: &str, plaintext: &str, uid: &str) -> bool {
+    let run_bin = bin_in_box().unwrap();
+
+    // encrypt data
+    let mut echo = Command::new(run_bin[2])
+        .args([plaintext])
+        .stdout(Stdio::piped())
+        .spawn()
+        .unwrap_or_else(|_| panic!("{}", ":: failed to run echo".bright_yellow()));
+    echo.wait()
+        .expect("--> Failed to wait echo encrypt_with_params()");
+    let gpg = Command::new(run_bin[0])
+        .args([
+            "-a",
+            "-o",
+            saved_path,
+            "-u",
+            uid,
+            "-r",
+            uid,
+            "--sign",
+            "--encrypt",
+            "--batch",
+            "--yes",
+        ])
+        .stdin(Stdio::from(echo.stdout.unwrap()))
+        .stdout(Stdio::piped())
+        .output()
+        .unwrap_or_else(|_| panic!("{}", ":: failed to run gpg".bright_yellow()));
+
+    gpg.stderr.is_empty()
+}
+
 pub fn encrypt_with_params(saved_path: &str, plaintext: &str, uid: &str, file_path: &str) -> bool {
     let run_bin = bin_in_box().unwrap();
 
