@@ -1,6 +1,6 @@
 pkgname=paperpass
 pkgver=1.1.11
-pkgrel=1
+pkgrel=2
 pkgdesc="Paperpass Arch Package"
 url="https://codeberg.org/rigel254/paperpass"
 # source=("$pkgname::git+$url#branch=main")
