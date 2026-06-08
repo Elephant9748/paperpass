@@ -1,7 +1,10 @@
 # paperpass
+
 > [!WARNING]
-> not ready to be used 
+> not ready to be used
+
 ## Usage
+
 ```
 Usage: paperpass [COMMAND] [OPTIONS] [ARGS]
        paperpass [GLOBAL OPTIONS] [ARGS]
@@ -33,9 +36,11 @@ Command:
         -d      <SOURCE PATH>           Contain source path
         -t      <DEST PATH>             Contain dest path
   genpass       <LENGTH>                Generate Passwords !not include Extended ASCII
+  import        <PATH>                  import .csv file from keepassxc (csv not encrypted!)
 ```
 
 ### format doc inside encrypted file
+
 ```
 [password or data to encrypt]
 [username]
