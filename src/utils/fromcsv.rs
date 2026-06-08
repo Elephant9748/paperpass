@@ -62,6 +62,7 @@ fn keepass_import(path: PathBuf) -> Result<(), Box<dyn Error>> {
             kepass_record.Username.as_str(),
             kepass_record.Password.as_str(),
             kepass_record.TOTP.as_str(),
+            dconfig.gpg.key.as_str(),
         );
         // println!("{:?}", kepass_record);
         let mut bar = String::new();
@@ -121,6 +122,7 @@ fn kepass_write_to_file(
     user: &str,
     pass: &str,
     totp: &str,
+    keyname: &str,
 ) {
     let destp = destpath.to_owned().into_os_string().into_string().unwrap()
         + "/"
@@ -131,5 +133,5 @@ fn kepass_write_to_file(
 
     let file_path = destp + "/" + title.replace(" ", "_").as_str() + ".asc";
     let s_out = pass.to_owned() + "\n" + user + "\n" + totp;
-    let _ = encrypt_with_params_clean(&file_path, &s_out, "marvin");
+    let _ = encrypt_with_params_clean(&file_path, &s_out, keyname);
 }
