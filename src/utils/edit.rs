@@ -48,6 +48,8 @@ pub fn edit_with_params(params: &str) {
     // encrypt to file
     let _ = Command::new(run_bin[0])
         .args([
+            "--batch",
+            "--yes",
             "-a",
             "-o",
             format!("{}.asc", decrypt_file).as_str(),
