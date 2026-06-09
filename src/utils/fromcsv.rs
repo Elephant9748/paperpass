@@ -1,6 +1,6 @@
 use crate::{
     config::configfile::set_config_path,
-    gpg::lock::encrypt_with_params_clean,
+    gpg::lock::PaperCrypt,
     utils::{manage_env::ENV_CONFIG, read_config_file},
 };
 use crossterm::{
@@ -13,7 +13,7 @@ use serde::Deserialize;
 use std::{
     env,
     error::Error,
-    io::{Write, stdout},
+    io::{self, Write, stdout},
     path::{self, PathBuf},
     process, thread,
     time::Duration,
@@ -55,7 +55,7 @@ fn keepass_import(path: PathBuf) -> Result<(), Box<dyn Error>> {
         let pacrun = pac[pac_idx];
 
         let kepass_record: KeepassCsv = kpass?;
-        kepass_write_to_file(
+        let _ = kepass_write_to_file(
             PathBuf::from(kepass_record.Group.to_owned()),
             PathBuf::from(&dconfig.store.path),
             kepass_record.Title.as_str(),
@@ -97,7 +97,6 @@ pub fn keepass_import_run(path: PathBuf) {
         process::exit(1);
     } else {
         let mut stdout = stdout();
-        // println!("\n{}{}", "::".blue(), " Import Succes.".green());
         execute!(
             stdout,
             MoveToNextLine(1),
@@ -123,15 +122,19 @@ fn kepass_write_to_file(
     pass: &str,
     totp: &str,
     keyname: &str,
-) {
-    let destp = destpath.to_owned().into_os_string().into_string().unwrap()
-        + "/"
-        + &group.to_owned().into_os_string().into_string().unwrap();
-    if !path::Path::new(&destp).exists() {
-        std::fs::create_dir_all(&destp).expect(":: force_create_path() for config failed");
-    }
+) -> io::Result<()> {
+    if let Ok(destpath) = destpath.to_owned().into_os_string().into_string()
+        && let Ok(group) = group.to_owned().into_os_string().into_string()
+    {
+        let destp = destpath + "/" + &group;
+        if !path::Path::new(&destp).exists() {
+            std::fs::create_dir_all(&destp).expect(":: force_create_path() for config failed");
+        }
 
-    let file_path = destp + "/" + title.replace(" ", "_").as_str() + ".asc";
-    let s_out = pass.to_owned() + "\n" + user + "\n" + totp;
-    let _ = encrypt_with_params_clean(&file_path, &s_out, keyname);
+        let file_path = destp + "/" + title.replace(" ", "_").as_str() + ".asc";
+        let s_out = pass.to_owned() + "\n" + user + "\n" + totp;
+        let mut papercrypt = PaperCrypt::newpure(&file_path, &s_out, keyname);
+        papercrypt.encrypt_with_params_pure()?;
+    }
+    Ok(())
 }

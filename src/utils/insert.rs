@@ -5,7 +5,7 @@ use colored::Colorize;
 use crate::{
     catch_stdin,
     errors::err::{Error, message},
-    gpg::lock::encrypt_with_params,
+    gpg::lock::PaperCrypt,
     utils::{git::git_commit, manage_env::ENV_CONFIG, read_config_file, valid_store_path},
 };
 
@@ -21,17 +21,18 @@ pub fn insert_with_params(params: &str) {
     let pass = catch_stdin();
 
     // encrypt pass
-    let go_encrypt = encrypt_with_params(
-        path_to_saved.as_str(),
-        pass.as_str(),
+    let mut papercrypt = PaperCrypt::new(
+        &path_to_saved,
+        &pass,
         config.gpg.key.as_str(),
-        params_to_saved.as_str(),
+        &params_to_saved,
     );
-
-    if go_encrypt {
-        println!("{}{}", "::".bright_blue(), " Encrypt Ok.".green())
-    } else {
-        println!("{}{}", "::".bright_blue(), " Encrypt Failed.".red())
+    if let Some(valid) = papercrypt.encrypt_with_params() {
+        if valid {
+            println!("{}{}", "::".bright_blue(), " Encrypt Ok.".green())
+        } else {
+            println!("{}{}", "::".bright_blue(), " Encrypt Failed.".red())
+        }
     }
 
     //git commit
@@ -49,13 +50,13 @@ pub fn insert_for_migration(params: &str, secrets: &str, path_to_saved: &str, ke
     let params_to_saved = valid_store_path(params);
 
     // encrypt pass
-    let go_encrypt =
-        encrypt_with_params(path_to_saved, secrets, key_name, params_to_saved.as_str());
-
-    if go_encrypt {
-        println!("{}{}", "::".bright_blue(), " Encrypt Ok.".green())
-    } else {
-        eprintln!("{}{}", "::".bright_blue(), " Encrypt Failed.".red())
+    let mut papercrypt = PaperCrypt::new(path_to_saved, secrets, key_name, &params_to_saved);
+    if let Some(valid) = papercrypt.encrypt_with_params() {
+        if valid {
+            println!("{}{}", "::".bright_blue(), " Encrypt Ok.".green())
+        } else {
+            println!("{}{}", "::".bright_blue(), " Encrypt Failed.".red())
+        }
     }
 
     //git commit
