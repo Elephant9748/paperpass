@@ -1,4 +1,4 @@
-use crate::errors::err::{Error, message};
+use crate::errors::err::PaperpassError;
 use colored::Colorize;
 use std::path::Path;
 
@@ -21,7 +21,10 @@ pub fn bin_in_box() -> Result<Box<Vec<&'static str>>, String> {
         run_bin.push("echo");
         run_bin.push("git");
     } else {
-        return Err(format!("{}", message(Error::BinariesNotFound).bright_red()));
+        return Err(format!(
+            "{}",
+            PaperpassError::BinariesNotFound.to_string().bright_red()
+        ));
     }
 
     Ok(run_bin)

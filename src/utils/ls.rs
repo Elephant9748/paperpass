@@ -4,7 +4,7 @@ use colored::Colorize;
 use crossterm::style::Stylize;
 
 use crate::{
-    errors::err::{Error, message},
+    errors::err::PaperpassError,
     utils::{manage_env::ENV_CONFIG, read_config_file},
 };
 
@@ -20,7 +20,7 @@ impl Ls {
     }
     pub fn get_store_path(&mut self) {
         let env_config_path =
-            env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
+            env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", PaperpassError::EnvNotFound));
         let read_config_from_file = read_config_file(&env_config_path).unwrap();
         self.store_path = read_config_from_file.store.path;
     }

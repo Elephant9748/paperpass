@@ -7,7 +7,7 @@ use std::{
 use colored::Colorize;
 
 use crate::{
-    errors::err::{Error, message},
+    errors::err::PaperpassError,
     gpg::unlock::decrypt_with_params,
     utils::{
         manage_env::{ENV_CONFIG, SESSION},
@@ -44,7 +44,7 @@ impl<'a> Clip<'a> {
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .spawn()
-            .unwrap_or_else(|_| panic!("{} {}", message(Error::CopyClipFailed), self.bin));
+            .unwrap_or_else(|_| panic!("{} {}", PaperpassError::CopyClipFailed, self.bin));
 
         let _ = copy.wait().expect("--> Failed to wait on copy");
     }
@@ -92,7 +92,7 @@ pub fn clipboard_copy(params: &str, timeout: i32) {
 
     // get full path
     let configpath =
-        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
+        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", PaperpassError::EnvNotFound));
     let config = read_config_file(&configpath).unwrap();
     let filename = read_full_filename(params, &config.store.path);
     let plaintext = decrypt_with_params(&filename);
@@ -137,7 +137,7 @@ pub fn username_copy(params: &str, timeout: i32) {
 
     // get full path
     let configpath =
-        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
+        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", PaperpassError::EnvNotFound));
     let config = read_config_file(&configpath).unwrap();
     let filename = read_full_filename(params, &config.store.path);
     let plaintext = decrypt_with_params(&filename);
@@ -169,7 +169,7 @@ pub fn username_show(params: &str) {
 
     // get full path
     let configpath =
-        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
+        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", PaperpassError::EnvNotFound));
     let config = read_config_file(&configpath).unwrap();
     let filename = read_full_filename(params, &config.store.path);
     let plaintext = decrypt_with_params(&filename);

@@ -1,24 +1,22 @@
-#[allow(dead_code)]
-pub enum Error {
-    OptionsNotFound,
-    CatchStdin,
-    FileNotFound,
-    CantBufRead,
-    ResultConfig,
-    EnvNotFound,
-    BinariesNotFound,
-    CopyClipFailed,
-}
+use thiserror::Error;
 
-pub fn message(err: Error) -> String {
-    match err {
-        Error::OptionsNotFound => " option not found \"-h\" to see available options".to_string(),
-        Error::CatchStdin => ":: catch_stdin failed.".to_string(),
-        Error::FileNotFound => ":: File Not Found!".to_string(),
-        Error::CantBufRead => ":: Error while read contents from bufreader!".to_string(),
-        Error::ResultConfig => ":: ResultError on".to_string(),
-        Error::EnvNotFound => ":: Env not Found".to_string(),
-        Error::BinariesNotFound => "Binaries Doesnt Exists.".to_string(),
-        Error::CopyClipFailed => "Copy to clipboard failed.".to_string(),
-    }
+#[allow(dead_code)]
+#[derive(Error, Debug)]
+pub enum PaperpassError {
+    #[error(" option not found \"-h\" to see available options")]
+    OptionsNotFound,
+    #[error(":: catch_stdin failed.")]
+    CatchStdin,
+    #[error(":: File Not Found!")]
+    FileNotFound,
+    #[error(":: Error while read contents from bufreader!")]
+    CantBufRead,
+    #[error(":: ResultError on")]
+    ResultConfig,
+    #[error(":: Env not Found")]
+    EnvNotFound,
+    #[error("Binaries Doesnt Exists.")]
+    BinariesNotFound,
+    #[error("Copy to clipboard failed.")]
+    CopyClipFailed,
 }

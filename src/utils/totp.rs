@@ -15,7 +15,7 @@ use crossterm::{
 use totp_rs::TOTP;
 
 use crate::{
-    errors::err::{Error, message},
+    errors::err::PaperpassError,
     gpg::unlock::decrypt_with_params,
     utils::{
         clipboard::Clip,
@@ -44,7 +44,7 @@ impl Totp {
 
     fn get_full_path_of_file(&mut self, params: &str) {
         let env_config_path =
-            env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
+            env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", PaperpassError::EnvNotFound));
         let read_config_from_file = read_config_file(&env_config_path).unwrap();
         let full_path_file = read_full_filename(params, &read_config_from_file.store.path);
         if self.session == "wayland" {

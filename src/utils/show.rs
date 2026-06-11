@@ -3,14 +3,14 @@ use std::{env, path::Path};
 use colored::Colorize;
 
 use crate::{
-    errors::err::{Error, message},
+    errors::err::PaperpassError,
     gpg::unlock::decrypt_with_params,
     utils::{manage_env::ENV_CONFIG, read_config_file},
 };
 
 pub fn show_with_params(params: &str) {
     let configpath =
-        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
+        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", PaperpassError::EnvNotFound));
     let config = read_config_file(&configpath).unwrap();
     let filename = read_full_filename(params, &config.store.path);
 
@@ -34,7 +34,7 @@ pub fn show_with_params_noprint(params: &str, full: i16) -> String {
     match full {
         1 => {
             let configpath =
-                env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
+                env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", PaperpassError::EnvNotFound));
             let config = read_config_file(&configpath).unwrap();
             let filename = read_full_filename(params, &config.store.path);
 

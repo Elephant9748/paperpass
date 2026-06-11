@@ -1,5 +1,5 @@
 use crate::{
-    errors::err::{Error, message},
+    errors::err::PaperpassError,
     options::opt::{Opt, args_options},
 };
 use colored::Colorize;
@@ -60,7 +60,7 @@ pub fn init_options_2(paperpass_args: Vec<String>) {
         println!(
             "{}{}",
             "::".bright_blue(),
-            message(Error::OptionsNotFound).bright_yellow()
+            PaperpassError::OptionsNotFound.to_string().bright_yellow()
         );
     }
 }
@@ -108,7 +108,7 @@ pub fn init_options_3(paperpass_args: Vec<String>) {
         println!(
             "{}{}",
             "::".bright_blue(),
-            message(Error::OptionsNotFound).bright_yellow()
+            PaperpassError::OptionsNotFound.to_string().bright_yellow()
         );
     }
 }
@@ -152,7 +152,7 @@ pub fn init_options_4(paperpass_args: Vec<String>) {
         println!(
             "{}{}",
             "::".bright_blue(),
-            message(Error::OptionsNotFound).bright_yellow()
+            PaperpassError::OptionsNotFound.to_string().bright_yellow()
         );
     }
 }
@@ -195,7 +195,7 @@ pub fn init_options_5(paperpass_args: Vec<String>) {
         println!(
             "{}{}",
             "::".bright_blue(),
-            message(Error::OptionsNotFound).bright_yellow()
+            PaperpassError::OptionsNotFound.to_string().bright_yellow()
         );
     }
 }
@@ -242,7 +242,7 @@ pub fn init_options_6(paperpass_args: Vec<String>) {
         println!(
             "{}{}",
             "::".bright_blue(),
-            message(Error::OptionsNotFound).bright_yellow()
+            PaperpassError::OptionsNotFound.to_string().bright_yellow()
         );
     }
 }
@@ -266,7 +266,7 @@ pub fn init_options_8(paperpass_args: Vec<String>) {
         println!(
             "{}{}",
             "::".bright_blue(),
-            message(Error::OptionsNotFound).bright_yellow()
+            PaperpassError::OptionsNotFound.to_string().bright_yellow()
         );
     }
 }

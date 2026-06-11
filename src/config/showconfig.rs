@@ -1,14 +1,14 @@
 use std::env;
 
 use crate::{
-    errors::err::{Error, message},
+    errors::err::PaperpassError,
     utils::{manage_env::ENV_CONFIG, read_config_file},
 };
 use colored::Colorize;
 
 pub fn show_config() {
     let configpath =
-        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound).as_str()));
+        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", PaperpassError::EnvNotFound));
     let config = read_config_file(&configpath).unwrap();
     println!();
     println!("Config{}\t", ":".bright_yellow());

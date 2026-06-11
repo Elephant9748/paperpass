@@ -2,7 +2,7 @@ use colored::Colorize;
 use std::io::{self, Write};
 
 use crate::{
-    errors::err::{Error, message},
+    errors::err::PaperpassError,
     options::{
         init_options::{
             init_options_2, init_options_3, init_options_4, init_options_5, init_options_6,
@@ -63,7 +63,7 @@ fn main() {
             "{}{}{}",
             not_menu.bright_red(),
             "::".bright_blue(),
-            message(Error::OptionsNotFound).bright_yellow()
+            PaperpassError::OptionsNotFound.to_string().bright_yellow()
         );
     }
 }
@@ -75,7 +75,7 @@ pub fn catch_stdin() -> String {
 
     io::stdin()
         .read_line(&mut input)
-        .unwrap_or_else(|_| panic!("{}", message(Error::CatchStdin)));
+        .unwrap_or_else(|_| panic!("{}", PaperpassError::CatchStdin));
 
     input.trim().to_string()
 }

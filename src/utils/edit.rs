@@ -6,7 +6,7 @@ use std::{
 use colored::Colorize;
 
 use crate::{
-    errors::err::{Error, message},
+    errors::err::PaperpassError,
     utils::{
         binaries::bin_in_box, manage_env::ENV_CONFIG, read_config_file, show::read_full_filename,
         valid_store_path,
@@ -15,7 +15,7 @@ use crate::{
 
 pub fn edit_with_params(params: &str) {
     let configpath =
-        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", message(Error::EnvNotFound)));
+        env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", PaperpassError::EnvNotFound));
     let config = read_config_file(&configpath).unwrap();
     let path_to_saved = valid_store_path(config.store.path.as_str());
     let params_to_saved = valid_store_path(params);
