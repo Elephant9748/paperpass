@@ -1,4 +1,4 @@
 pub mod banner;
+pub mod command_options;
 pub mod helpstdout;
-pub mod init_options;
 pub mod opt;
