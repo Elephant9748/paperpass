@@ -6,13 +6,18 @@ use crate::{
     config::configfile::{
         git_init, set_config_path, set_git, set_options_config_path, set_store_path,
     },
+    errors::err::PaperpassError,
     gpg::helper::{GpgHelper, listprivatekeys},
     options::banner::prompt_banner,
-    utils::manage_env::{ENV_CONFIG, set_env},
+    utils::{
+        manage_env::{ENV_CONFIG, set_env},
+        read_config_file,
+    },
 };
 use colored::Colorize;
 use serde::{Deserialize, Serialize};
 use std::{
+    env,
     fs::File,
     io::{BufWriter, Write},
     path::Path,
@@ -117,7 +122,17 @@ pub fn init_config() {
 pub fn init_config_with_params(opt1: &str, opt2: &str, opt3: &str, opt4: &str) {
     let recipient = GpgHelper::new(listprivatekeys().unwrap());
 
-    let opt1 = if opt1.is_empty() { "store" } else { opt1 };
+    // check toml config of store path
+    let conf = env::var(ENV_CONFIG).unwrap_or_else(|_| panic!("{}", PaperpassError::EnvNotFound));
+    let read_conf = read_config_file(&conf).expect(":: failed to read config .toml");
+    let gitstorepath = if read_conf.store.path.is_empty() {
+        "store"
+    } else {
+        read_conf.store.path.as_str()
+    };
+
+    // git path
+    let opt1 = if opt1.is_empty() { gitstorepath } else { opt1 };
     let opt3 = if opt3.is_empty() {
         &recipient.get_all().unwrap()[0].to_string()
     } else {

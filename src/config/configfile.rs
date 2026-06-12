@@ -178,6 +178,11 @@ pub fn set_git(g: String) -> Result<bool, String> {
 pub fn git_init(init: bool, store: String) -> io::Result<()> {
     if init {
         let _ = git_init_run(store.as_str());
+    } else {
+        let p = store + ".git";
+        if Path::new(&p).exists() {
+            std::fs::remove_dir_all(p).expect(">  Remove .git dir failed");
+        }
     }
     Ok(())
 }
