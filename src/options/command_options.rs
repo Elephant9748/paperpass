@@ -359,7 +359,7 @@ impl Args {
                                 "".to_owned(),
                                 "".to_owned(),
                                 self.params[index_c + 1].to_owned(),
-                                "".to_owned(),
+                                "y".to_owned(),
                             ));
                         } else {
                             self.run = RunArgs::Empty;
@@ -428,6 +428,20 @@ impl Args {
                         } else {
                             self.run = RunArgs::Empty;
                             self.run_args();
+                        }
+                    }
+                    7 => {
+                        if self.params.contains(&"init".to_string())
+                            && self.params.contains(&"-s".to_string())
+                            && self.params.contains(&"-c".to_string())
+                            && self.params.contains(&"-pk".to_string())
+                        {
+                            args_options(Opt::InitParams(
+                                self.params[index_a + 1].to_owned(),
+                                self.params[index_b + 1].to_owned(),
+                                self.params[index_c + 1].to_owned(),
+                                "".to_owned(),
+                            ));
                         }
                     }
                     _ => {
