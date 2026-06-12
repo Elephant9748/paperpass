@@ -6,16 +6,18 @@
 ## Usage
 
 ```
-Usage: paperpass [COMMAND] [OPTIONS] [ARGS]
-       paperpass [GLOBAL OPTIONS] [ARGS]
+Usage: paperpass [COMMAND] [ARGS] [COMMAND OPTIONS]
+       paperpass [GLOBAL OPTIONS]
 
 Options global:
-  -c <YOUR/DATA/STORE>          Copy password to clipboard
-  -time <TIME>                  Copy to clipboard with autoclear after amount of sec TIME=NUMBER default is 30 sec
-  -h --help                     Print help
-  -v --version                  Print version
-  -lk                           Print list of pgpkey
-  -config --config              Show config json
+  -h --help             Print help
+  -v --version          Print version
+  -lk                   Print list of pgpkey
+  -config --config      Show config json
+
+Command Options:
+  -c                    Copy password to clipboard
+  -time <TIME>          Copy to clipboard with autoclear after amount of sec TIME=NUMBER default is 30 sec
 
 Command:
   init                                  Set init config generate toml
@@ -35,7 +37,7 @@ Command:
   migrate       <YOUR GPG KEY NAME>     Migrate boxpaperpass to new key
         -d      <SOURCE PATH>           Contain source path
         -t      <DEST PATH>             Contain dest path
-  genpass       <LENGTH>                Generate Passwords !not include Extended ASCII
+  genpass       <LENGTH>                Generate Passwords !not include Extended ASCII then copy to clipboard expired default 30s
   import        <PATH>                  import .csv file from keepassxc (csv not encrypted!)
 ```
 

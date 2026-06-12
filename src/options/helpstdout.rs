@@ -8,35 +8,28 @@ pub fn prompt_help() {
     let git_head_hash = env!("GIT_HASH");
     prompt_banner();
     print!("{}", "\nUsage: ".green());
-    println!("{}", "paperpass [COMMAND] [OPTIONS] [ARGS]".cyan());
-    println!("{}", "       paperpass [GLOBAL OPTIONS] [ARGS]".cyan());
+    println!("{}", "paperpass [COMMAND] [ARGS] [COMMAND OPTIONS]".cyan());
+    println!("{}", "       paperpass [GLOBAL OPTIONS]".cyan());
     println!("{}", "\nOptions global: ".green());
+    println!("{}{}", "  -h --help".cyan(), "\t\tPrint help".white());
+    println!("{}{}", "  -v --version".cyan(), "\t\tPrint version".white());
+    println!("{}{}", "  -lk".cyan(), "\t\t\tPrint list of pgpkey".white());
     println!(
         "{}{}",
-        "  -c <YOUR/DATA/STORE>".cyan(),
-        "\t\tCopy password to clipboard".white()
+        "  -config --config".cyan(),
+        "\tShow config json".white()
+    );
+    println!("{}", "\nCommand Options: ".green());
+    println!(
+        "{}{}",
+        "  -c ".cyan(),
+        "\t\t\tCopy password to clipboard".white()
     );
     println!(
         "{}{}",
         "  -time <TIME>".cyan(),
-        "\t\t\tCopy to clipboard with autoclear after amount of sec TIME=NUMBER default is 30 sec"
+        "\t\tCopy to clipboard with autoclear after amount of sec TIME=NUMBER default is 30 sec"
             .white()
-    );
-    println!("{}{}", "  -h --help".cyan(), "\t\t\tPrint help".white());
-    println!(
-        "{}{}",
-        "  -v --version".cyan(),
-        "\t\t\tPrint version".white()
-    );
-    println!(
-        "{}{}",
-        "  -lk".cyan(),
-        "\t\t\t\tPrint list of pgpkey".white()
-    );
-    println!(
-        "{}{}",
-        "  -config --config".cyan(),
-        "\t\tShow config json".white()
     );
     println!("{}", "\nCommand: ".green());
     println!(
@@ -123,7 +116,7 @@ pub fn prompt_help() {
     println!(
         "{}{}",
         "  genpass\t<LENGTH>".cyan(),
-        "\t\tGenerate Passwords !not include Extended ASCII".white()
+        "\t\tGenerate Passwords !not include Extended ASCII then copy to clipboard expired default 30s".white()
     );
     println!(
         "{}{}{}",
