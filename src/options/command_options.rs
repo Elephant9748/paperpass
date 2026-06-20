@@ -173,6 +173,30 @@ impl Args {
                             }
                         }
                     }
+                    4 => {
+                        match &self.params {
+                            c if c.contains(&"-time".to_string()) && index < 1 => {
+                                args_options(Opt::Copy(
+                                    self.params[index + 1].to_owned(),
+                                    self.params[index_time + 1].parse::<i32>().unwrap_or_else(
+                                        |_| panic!("> cant parse i32 on GenPass timeout"),
+                                    ),
+                                ))
+                            }
+                            c if c.contains(&"-time".to_string()) && index >= 1 => {
+                                args_options(Opt::Copy(
+                                    self.params[0].to_owned(),
+                                    self.params[index_time + 1].parse::<i32>().unwrap_or_else(
+                                        |_| panic!("> cant parse i32 on GenPass timeout"),
+                                    ),
+                                ))
+                            }
+                            _ => {
+                                self.run = RunArgs::Empty;
+                                self.run_args();
+                            }
+                        }
+                    }
                     5 => {
                         match &self.params {
                             c if c.contains(&"user".to_string())
