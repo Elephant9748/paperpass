@@ -8,11 +8,11 @@ chrono = "0.4.45"
 colored = "3.1.1"
 crossterm = "0.29.0"
 csv = "1.4.0"
-passwords = "3.1.16"
+passwords = "3.1.18"
 serde = { version = "1.0.228", features = ["derive"] }
 thiserror = "2.0.18"
-toml = "1.1.2"
-totp-rs = { version = "5.7.1", features = ["otpauth", "url"] }
+toml = "1.1.3"
+totp-rs = { version = "5.7.2", features = ["otpauth", "url"] }
 
 [build-dependencies]
 chrono = "0.4.45"
