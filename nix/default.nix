@@ -1,4 +1,5 @@
 # nix-build -E 'with import <nixpkgs> {}; callPackage ./paperpass-bin.nix {}'
+# with flake just: nix build . --impure
 
 # Guide:
 # https://github.com/NixOS/nixpkgs/blob/master/doc/languages-frameworks/rust.section.md
@@ -8,15 +9,11 @@
   fetchFromGitHub,
   rustPlatform,
   git,
+  stdenv,
   gitRev,
   gitLastModified
 }:
 
-let
-        gitInfo = builtins.fetchGit ../.;
-        rev = gitInfo.rev or "unkknown";
-        buildTime = lib.formatDate "%Y-%m-%d %H:%M:%S" (builtins.currentTime);
-in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "paperpass";
   version = "1.1.11";
@@ -43,14 +40,24 @@ rustPlatform.buildRustPackage (finalAttrs: {
   #       ls -la
   # '';
 
+  inherit gitRev gitLastModified;
+
   nativeBuildInputs = [ git ];
 
-  GIT_HASH = rev;
-  DATE =  builtins.toString gitLastModified;
+  # RUSTFLAGS = "-C link-arg=-Wl,--compress-debug-sections=zlib";
+  # GIT_HASH = gitRev;
+  # DATE =  builtins.toString gitLastModified;
   # env = {
-  #       PAPERPASS_GIT_HASH = rev;
-  #       PAPERPASS_DATE =  builtins.toString gitLastModified;
+  #       GIT_HASH = gitRev;
+  #       DATE =  builtins.toString gitLastModified;
   # };
+  preConfigure = ''
+        export GIT_HASH="${gitRev}"
+        export DATE="${gitLastModified}"
+        echo "DEBUG: GIT_HASH=$GIT_HASH"
+        echo "DEBUG: DATE=$DATE"
+        echo "DEBUG: SOURCE_DATE_EPOCH=$SOURCE_DATE_EPOCH"
+  '';
 
   cargoHash = "sha256-94wUp3BG+ZC2quUQtAxbiv3WgAWB2eHvW89n2T6iCKs=";
 
@@ -65,5 +72,4 @@ rustPlatform.buildRustPackage (finalAttrs: {
     mainProgram = "${finalAttrs.pname}";
   };
 })
-
 
