@@ -7,22 +7,31 @@
   lib,
   fetchFromGitHub,
   rustPlatform,
-  git
+  git,
+  gitRev,
+  gitLastModified
 }:
 
+let
+        gitInfo = builtins.fetchGit ../.;
+        rev = gitInfo.rev or "unkknown";
+        buildTime = lib.formatDate "%Y-%m-%d %H:%M:%S" (builtins.currentTime);
+in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "paperpass";
   version = "1.1.11";
 
   # cargoLock.lockFile = ./Cargo.lock;
 
-  src = fetchFromGitHub {
-    owner = "Elephant9748";
-    repo = "paperpass";
-    # tag = "${finalAttrs.version}";
-    rev = "refs/heads/main";
-    hash = "sha256-W0bIsEnA/kmnJTEUeTpTDCEdbNCWawM1tQdGdijvJuY=";
-  };
+  src = ./..;
+
+  # src = fetchFromGitHub {
+  #   owner = "Elephant9748";
+  #   repo = "paperpass";
+  #   # tag = "${finalAttrs.version}";
+  #   rev = "refs/heads/main";
+  #   hash = "sha256-W0bIsEnA/kmnJTEUeTpTDCEdbNCWawM1tQdGdijvJuY=";
+  # };
 
   # cargoPatches = [ ./0001-cargo-lock.patch ];
 
@@ -36,7 +45,14 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
   nativeBuildInputs = [ git ];
 
-  cargoHash = "sha256-iSY2BmUQ/X9+Uu7G0uINFuhZB2ieU++shV30RSGKt94=";
+  GIT_HASH = rev;
+  DATE =  builtins.toString gitLastModified;
+  # env = {
+  #       PAPERPASS_GIT_HASH = rev;
+  #       PAPERPASS_DATE =  builtins.toString gitLastModified;
+  # };
+
+  cargoHash = "sha256-94wUp3BG+ZC2quUQtAxbiv3WgAWB2eHvW89n2T6iCKs=";
 
   meta = {
     description = "paperpass-git password manager in terminal";
@@ -49,4 +65,5 @@ rustPlatform.buildRustPackage (finalAttrs: {
     mainProgram = "${finalAttrs.pname}";
   };
 })
+
 
