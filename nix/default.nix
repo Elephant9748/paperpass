@@ -40,6 +40,8 @@ rustPlatform.buildRustPackage (finalAttrs: {
   #       ls -la
   # '';
 
+  cargoLock.lockFile = ./Cargo.lock;
+
   inherit gitRev gitLastModified;
 
   nativeBuildInputs = [ git ];
