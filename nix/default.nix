@@ -1,4 +1,4 @@
-# nix-build -E 'with import <nixpkgs> {}; callPackage ./paperpass-bin.nix {}'
+# nix-build -E 'with import <nixpkgs> {}; callPackage ./nix/default.nix {}'
 # with flake just: nix build . --impure
 
 # Guide:
@@ -63,8 +63,8 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
   meta = {
     description = "paperpass-git password manager in terminal";
-    homepage = "https://github.com/Elephant9748/paperpass";
-    changelog = "https://github.com/Elephant9748/paperpass/releases/tag/${finalAttrs.version}";
+    homepage = "https://codeberg.org/rigel254/paperpass";
+    changelog = "https://codeberg.org/rigel254/paperpass/releases/tag/${finalAttrs.version}";
     license = lib.licenses.mit;
     maintainers = with lib.maintainers; [
       rigel
