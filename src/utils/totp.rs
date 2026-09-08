@@ -12,7 +12,7 @@ use crossterm::{
     event::{Event, KeyCode, read},
     terminal,
 };
-use totp_rs::TOTP;
+use totp_rs::Totp;
 
 use crate::{
     errors::err::PaperpassError,
@@ -25,12 +25,12 @@ use crate::{
     },
 };
 
-struct Totp {
+struct PaperTotp {
     session: String,
     full_path: String,
 }
 
-impl Totp {
+impl PaperTotp {
     fn new(session: String) -> Self {
         Self {
             session,
@@ -63,13 +63,13 @@ impl Totp {
 }
 
 pub fn totp_create(params: &str, timeout: i32) {
-    let mut totp = Totp::new(env::var(SESSION).unwrap());
+    let mut totp = PaperTotp::new(env::var(SESSION).unwrap());
     totp.get_full_path_of_file(params);
     let plaintext = totp.decrypt_file();
 
     // get otp url uncheck from plaintext
     let plainvec: Vec<&str> = plaintext.split("\n").collect();
-    let totprs = TOTP::from_url_unchecked(plainvec[2])
+    let totprs = Totp::from_url_unchecked(plainvec[2])
         .unwrap_or_else(|_| panic!("{}", "Totp::try_from error ->".bright_red()));
 
     //timestamp
@@ -89,6 +89,7 @@ pub fn totp_create(params: &str, timeout: i32) {
         clip.copy(
             totprs
                 .generate(timestamp.timestamp().try_into().unwrap())
+                .to_string()
                 .as_str(),
         );
         clip.clear_clipboard(timeout);
@@ -113,7 +114,7 @@ pub fn totp_create(params: &str, timeout: i32) {
                 "\r{} {}{}{} {}{}{}",
                 out_otp.to_string().bright_green(),
                 "(".blue(),
-                totprs.ttl().unwrap().to_string().red(),
+                totprs.ttl().to_string().red(),
                 ")".blue(),
                 "(".blue(),
                 "Press 'q' to exit or ctrl + c".bright_yellow(),

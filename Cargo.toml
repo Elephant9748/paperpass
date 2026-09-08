@@ -9,10 +9,10 @@ colored = "3.1.1"
 crossterm = "0.29.0"
 csv = "1.4.0"
 passwords = "3.1.18"
-serde = { version = "1.0.228", features = ["derive"] }
-thiserror = "2.0.18"
-toml = "1.1.3"
-totp-rs = { version = "5.7.2", features = ["otpauth", "url"] }
+serde = { version = "1.0.229", features = ["derive"] }
+thiserror = "2.0.20"
+toml = "1.1.5"
+totp-rs = { version = "6.0.0", features = ["otpauth"] }
 
 [build-dependencies]
 chrono = "0.4.45"
