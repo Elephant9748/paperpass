@@ -23,7 +23,7 @@ jobs:
     name: create-release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@main
         with:
           fetch-depth: 0
 
@@ -102,7 +102,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@main
 
       - name: Install packages (Ubuntu)
         if: matrix.os == 'ubuntu-latest'
