@@ -20,7 +20,7 @@ let
 in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "paperpass";
-  version = "1.1.12";
+  version = "1.1.13";
 
   # cargoLock.lockFile = ./Cargo.lock;
 
